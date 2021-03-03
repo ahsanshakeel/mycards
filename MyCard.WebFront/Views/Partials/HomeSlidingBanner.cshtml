@@ -1,0 +1,78 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<Home>
+@using MyCard.WebFront.API.Models
+@{
+    List<IPublishedContent> bannerItems = null;
+    if (Model.Content.Banner != null)
+    {
+        bannerItems = Model.Content.Banner.ToList();
+    }
+}
+
+<div class="carousel slide mar-top40" id="carousel-example-generic" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        @{
+            int i = 0;
+            foreach (var bannerItem in bannerItems)
+            {
+                if (i == 0)
+                {
+                    <li class="active" data-target="#carousel-example-generic" data-slide-to="@i"></li>
+                }
+                else
+                {
+                    <li data-target="#carousel-example-generic" data-slide-to="@i"></li>
+                }
+
+                i++;
+            }
+        }
+    </ol>
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox">
+        @{
+            i = 1;
+            foreach (var bannerItem in bannerItems)
+            {
+                var bannerImage = bannerItem.GetPropertyValue<IPublishedContent>("bannerImage");
+                if (i == 1)
+                {
+                    <div class="item active">
+                        <img class="img-responsive" alt="slider-@i" src="@bannerImage.Url">
+                        <div class="carousel-caption">
+
+                            <div class="align-left">
+                                <h1 class="banner1">
+                                    Your business Network:<br>
+                                    Anytime, Anywhere.
+                                </h1>
+
+                                <button class="l-more three">Learn more</button>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="item">
+                        <img class="img-responsive" alt="slider-@i" src="@bannerImage.Url">
+                        <div class="carousel-caption">
+
+                            <div class="align-left">
+                                <h1 class="banner1">
+                                    Your business Network:<br>
+                                    Anytime, Anywhere.
+                                </h1>
+
+                                <button class="l-more three">Learn more</button>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+                i++;
+            }
+        }
+    </div>
+</div>

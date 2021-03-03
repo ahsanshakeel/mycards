@@ -1,0 +1,286 @@
+﻿@model MyCard.Web.Models.POListingViewModel
+
+@{
+    ViewBag.Title = @MyCard.Web.Resources.CaptionsAll.POLIstingTitle;
+    Layout = "~/Areas/Admin/Views/Shared/_MasterLayoutSuperAdmin.cshtml";
+}
+
+@{
+    var postatuslist = new List<SelectListItem>
+        {
+        new SelectListItem { Text = "Pending", Value = "0" },
+        new SelectListItem { Text = "Accepted", Value = "1" },
+        new SelectListItem { Text = "Rejected", Value = "2" },
+        new SelectListItem { Text = "All", Value = "99" }
+        };
+}
+
+
+
+
+@*@using (Ajax.BeginForm("POListing", "Default", FormMethod.Post, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "divData" }, new { encType = "multipart/form-data" }))*@
+@using (Ajax.BeginForm("PurchaseOrdersListing", "Default", new AjaxOptions { HttpMethod = "Post", InsertionMode = InsertionMode.Replace, UpdateTargetId = "PurchaseOrdersDiv" }))
+{
+   
+    <div class="col-md-12">
+        <div class="pull-right">
+            <a href="#" onclick="exportfunc();"><h5>Export</h5></a>
+        </div>
+        
+        <h3 class="mar-bot15 color-blue book h3-well">Purchase Orders Listing</h3>
+        <div class="row">
+            <div class="col-md-3 mar-right15">
+                <div class="">
+                    @Html.TextBoxFor(m => m.SearchString, Model.SearchString, new { @placeholder = "Search purchase order" })
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="">
+                    @Html.TextBoxFor(m => m.DateFrom, "", new { @placeholder = "From Date" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="">
+                    @Html.TextBoxFor(m => m.DateTo, "", new { @placeholder = "To Date" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="">
+                    @Html.DropDownListFor(m => m.POStatus, new SelectList(postatuslist, "Value", "Text", Model.POStatus), new { @class = "s-input", @placeholder = "PO Status" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="">
+                    <input type="button" id="SearchButton" Name="SearchButton" value="Search" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="PurchaseOrdersDiv">
+        @Html.Partial("_PartialPurchaseOrders", Model)
+
+    </div>
+
+
+}
+
+<div style="top:25%;" class="modal fade popup_view" id="confirmpopup_view" name="confirmpopup_view">
+    <div class="modal-dialog">
+        <div style="border:none;" class="modal-content">
+            <div class="col-xs-12">
+                <div class="green-bg popup">
+                    @*<div class="col-xs-3"></div>*@
+                    @*<div class="col-xs-9">*@
+                        <h4 class="color-white bold h4-well24 mar-left5 mar-bot15"> @MyCard.Web.Resources.CaptionsAll.POStatusChangeMessage</h4>
+                        
+                    @*</div>*@
+                    @*<div class="clear"></div>*@
+                </div>
+                <button type="button" class=" submit small pull-right" id="btnYesConfirmYesNo">OK <i class=" fa fa-next"></i></button>
+                <button type="button" class=" submit small pull-right mar-right10" id="btnNoConfirmYesNo">Back <i class=" fa fa-next"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="top:25%;" class="modal fade popup_view" id="confirmpopup_view_reject" name="confirmpopup_view_reject">
+    <div class="modal-dialog">
+        <div style="border:none;" class="modal-content">
+            <div class="col-xs-12">
+                <div class="green-bg popup">
+                    @*<div class="col-xs-1"></div>*@
+                    <div class="col-xs-12">
+                        <textarea id="rejectionreason" cols="50" rows="3" class="form-control"></textarea>
+                        @*<input type="textarea" id="rejectionreason"/>*@
+                        <br />
+                        <h5 class="color-white five"> @MyCard.Web.Resources.CaptionsAll.ReasonForRejection</h5>
+
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <button type="button" class=" submit small pull-right" id="btnYesConfirmYesNoReject">OK <i class=" fa fa-next"></i></button>
+                <button type="button" class=" submit small pull-right mar-right10" id="btnNoConfirmYesNoReject">Back <i class=" fa fa-next"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="top:25%;" class="modal fade popup_view" id="reasonpopup_view" name="reasonpopup_view">
+    <div class="modal-dialog">
+        <div style="border:none;" class="modal-content">
+            <div class="col-xs-12">
+                <div class="green-bg popup">
+                    @*<div class="col-xs-1"></div>*@
+                    <div class="col-xs-12">
+                        <h5 id="h4Reason" class="color-white five mar-left20 mar-right20"> </h5>
+
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <button type="button" class=" submit small pull-right" id="btnreasonOK" onclick="reasonPopupClose();">OK <i class=" fa fa-next"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    //$(".pager").click(function (evt) {
+    //    var pageindex = $(evt.target).data("pageindex");
+    //    $("#CurrentPageIndex").val(pageindex);
+    //    evt.preventDefault();
+    //    $("form").submit();
+    //});
+    function pagerclick(pindex) {
+        var pageindex = pindex;
+        $("#CurrentPageIndex").val(pageindex);
+        //evt.preventDefault();
+        $("form").submit();
+
+    }
+
+    function exportfunc() {
+        var url = "/Admin/Default/PurchaseOrdersExport?"
+            + "&SearchString=" + $("#SearchString").val()
+            + "&DateTo=" + $("#DateTo").val()
+            + "&DateFrom=" + $("#DateFrom").val()
+            + "&POStatus=" + $("#POStatus").val();
+
+        window.location.href = url;
+
+    }
+
+    $('#POStatus').change(function () {
+        $("#CurrentPageIndex").val(0);
+        $("form").submit();
+    });
+
+    function reasonPopupClose()
+    {
+        $("#reasonpopup_view").modal("hide");
+    }
+
+    function PageSizeChange()
+    {
+        $("#CurrentPageIndex").val(0);
+        $("form").submit();
+    }
+
+    $("#SearchString").keyup(function (event) {
+        //if (event.keyCode == 13) {
+            $("#CurrentPageIndex").val(0);
+            $("form").submit();
+        //}
+    });
+
+    $("#SearchButton").click(function (event) {
+        $("#CurrentPageIndex").val(0);
+        $("form").submit();
+    });
+
+
+    $(function () {
+        // This will make every element with the class "date-picker" into a DatePicker element
+        //$('.date-picker').datepicker();
+        //$('#datepicker').datepicker({ format: 'yyyy-mm-dd' });
+        //$("#DateFrom").datepicker({ format: 'd-M-yy' }).val();
+        //$("#DateTo").datepicker({ format: 'd-M-yy' }).val();
+
+        $("#DateFrom").datepicker({dateFormat: 'dd-M-yy'}).val();
+        $("#DateTo").datepicker({dateFormat: 'dd-M-yy'}).val();
+    })
+
+
+    function UpdatePO(elem) {
+        var answer = elem.options[elem.selectedIndex].value;
+        var isDone = answer;
+        var reject = $('#rejectionreason').val();
+        var pid = $(elem).data('itemid');
+
+        $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdatePO", "Default")',
+                data: { approved: isDone, orderId: pid, rejectReason: reject },
+            success: function(res) {
+                console.log(res);
+            }
+        });
+    }
+
+    function AsyncConfirmYesNo(elem) {
+        var $confirm;
+        if (elem.options[elem.selectedIndex].text == "Rejected")
+        {
+            $confirm = $("#confirmpopup_view_reject");
+        }
+        else
+        {
+            $confirm = $("#confirmpopup_view");
+        }
+
+        $confirm.modal('show');
+        $("#btnYesConfirmYesNo").off('click').click(function () {
+            UpdatePO(elem);
+            $confirm.modal("hide");
+            Paging();
+        });
+        $("#btnYesConfirmYesNoReject").off('click').click(function () {
+            UpdatePO(elem);
+            $confirm.modal("hide");
+            Paging();
+        });
+        $("#btnNoConfirmYesNo").off('click').click(function () {
+            $confirm.modal("hide");
+            Paging();
+        });
+        $("#btnNoConfirmYesNoReject").off('click').click(function () {
+            $confirm.modal("hide");
+            Paging();
+        });
+    }
+
+    function showReason(elem)
+    {
+        $("#h4Reason").text(elem);
+        $("#reasonpopup_view").modal('show')
+    }
+
+    function Paging() {
+        $("form").submit();
+    }
+
+    @*function DownloadPO(elem) {
+    var pid = $(elem).data('itemid');
+    $.ajax({
+        type: 'POST',
+        url: '@Url.Action("DowloadPO", "Default")',
+        data: { orderId:pid },
+        success: function(res) {
+            console.log(res);
+        }
+    });
+}*@
+
+    function DownloadPO(orderid) {
+        var pid = orderid;
+    $.ajax({
+        type: 'GET',
+        url: '@Url.Action("DownloadFile", "Default")',
+        data: { orderId:pid },
+        success: function(res) {
+            console.log(res);
+        }
+    });
+}
+
+//    function DownloadFile(fileId) {
+//    var pid = $(elem).data('itemid');
+//    $("#hfFileId").val(fileId);
+//    $("#btnDownload")[0].click();
+//}
+
+</script>
+

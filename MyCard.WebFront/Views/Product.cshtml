@@ -1,0 +1,124 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<Product>
+@using MyCard.WebFront.API.Models
+@{
+    Layout = null;
+    IPublishedContent productBannerImage = Model.Content.ProductBannerImage;
+
+}
+
+<html>
+<head>
+    <link href="~/css/bootstrap.css" rel="stylesheet">
+    <link href="~/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    @Html.Partial("Navigation", (IPublishedContent)Model.Content)
+
+    <section class="my-card">
+        <img class=" img-responsive" alt="product" src="@productBannerImage.Url">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 col-sm-6 banner-text">
+                    <div class="align-left">
+                        <h1 class="color-white">
+                            @Model.Content.ProductBannerImageText
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="benefits pad-top40 pad-bot40 section">
+        <div class="container pad-top30 pad-bot40 ">
+            <h2 class="text-center mar-bot40 mar-top40 h2-bottom four">@Model.Content.MyCardBenefitsHeading</h2>
+            <div class="row">
+                @{
+                    var benefits = Model.Content.MyCardBenefits.ToList();
+                    foreach (var benefit in benefits)
+                    {
+                        var benefitImage = benefit.GetPropertyValue<IPublishedContent>("benefitImage");
+                        var benefitText = benefit.GetPropertyValue<string>("benefitText");
+                            <div class="col-sm-3 col-xs-6">
+                            <div>
+                                <img class="center-block" src="@benefitImage.Url">
+                            </div>
+                            <div class="clearfix"></div>
+                            <h4 class="text-center  mar-top10">@benefitText</h4>
+                        </div>
+                    }
+
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class=" pad-top40 bg-white">
+
+        <h2 class="four pad-top40 card-bot text-center bg-white">@Model.Content.FeaturesHeading</h2>
+        @{
+            if (Model.Content.Features != null)
+            {
+                var features = Model.Content.Features.ToList();
+                int count = 1;
+                foreach (var feature in features)
+                {
+                    var featureTitle = feature.GetPropertyValue<string>("featureTitle");
+                    var featureDescription = feature.GetPropertyValue<IHtmlString>("featureDescription");
+                    var featureIcon = feature.GetPropertyValue<IPublishedContent>("featureIcon");
+                    var featureImage = feature.GetPropertyValue<IPublishedContent>("featureImage");
+                    if (count % 2 != 0)
+                    {
+                        <div class="odd-section">
+                            <div class="container p-t">
+                                <div class="row">
+                                    <div class="col-sm-offset-3 col-sm-4 row">
+                                        <div class="odd-text">
+                                            <img src="@featureIcon.Url">
+                                            <h4 class="mar-bot10 bold">@featureTitle</h4>
+                                            @featureDescription
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 col-xs-6 row">
+                                        <img class="img-responsive row " src="@featureImage.Url">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    }
+                    else
+                    {
+                        <div class="even-section">
+                            <div class="container" style="position:relative;">
+                                <div class=" col-xs-12 absolute">
+
+                                    <div class="col-sm-offset-3 col-sm-3  col-xs-6 col-xs-offset-0 ">
+                                        <img class="img-responsive" src="@featureImage.Url">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="even-text">
+                                            <img src="@featureIcon.Url">
+                                            <h4 class="bold">@featureTitle</h4>
+                                                @featureDescription
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    }
+                    count++;
+                }
+            }
+
+        }
+    </section>
+
+    <div class="clearfix"></div>
+    @Html.Partial("ContactSection", (IPublishedContent)Model.Content)
+    <script src="~/scripts/jquery.js"></script>
+    <script src="~/scripts/bootstrap.js"></script>
+</body>
+</html>

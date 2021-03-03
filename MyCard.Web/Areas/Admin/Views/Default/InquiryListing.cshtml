@@ -1,0 +1,112 @@
+﻿@model MyCard.Web.Models.InquiryListingViewModel
+@{
+    ViewBag.Title = @MyCard.Web.Resources.CaptionsAll.InquiryListingTitle;
+    Layout = "~/Areas/Admin/Views/Shared/_MasterLayoutSuperAdmin.cshtml";
+}
+
+
+@using (Ajax.BeginForm("InquiryListing", "Default", new AjaxOptions { HttpMethod = "Post", InsertionMode = InsertionMode.Replace, UpdateTargetId = "InquiryDiv" }))
+{
+
+    <div class="col-md-12">
+        <div class="pull-right">
+            <a href="#" onclick="exportfunc();"><h5>Export</h5></a>
+        </div>
+        <h3 class="mar-bot15 color-blue book h3-well">Leads Listing</h3>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="">
+                    @Html.TextBoxFor(m => m.SearchString, Model.SearchString, new { @placeholder = "Search Business/Customer Name or Email " })
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="">
+                    @Html.TextBox("DateFrom", "", new { @placeholder = "From Date" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="">
+                    @Html.TextBox("DateTo", "", new { @placeholder = "To Date" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="">
+                    <input type="button" id="SearchButton" Name="SearchButton" value="Search" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="InquiryDiv">
+        @Html.Partial("_PartialInquiries", Model)
+
+    </div>
+
+}
+
+<script type="text/javascript">
+    //$(".pager").click(function (evt) {
+    //    var pageindex = $(evt.target).data("pageindex");
+    //    $("#CurrentPageIndex").val(pageindex);
+    //    evt.preventDefault();
+    //    $("form").submit();
+    //});
+
+    function pagerclick(pindex)
+    {
+        var pageindex = pindex;
+        $("#CurrentPageIndex").val(pageindex);
+        //evt.preventDefault();
+        $("form").submit();
+
+    }
+
+    function exportfunc() {
+        var url = "/Admin/Default/InquiryListingExport?"
+            + "&SearchString=" + $("#SearchString").val()
+            + "&DateTo=" + $("#DateTo").val()
+            + "&DateFrom=" + $("#DateFrom").val();
+
+        window.location.href = url;
+
+    }
+
+    function PageSizeChange() {
+        $("#CurrentPageIndex").val(0);
+        $("form").submit();
+    }
+
+    //$("#SearchString").keyup(function (event) {
+    //    if (event.keyCode == 13) {
+    //        $("#CurrentPageIndex").val(0);
+    //        $("form").submit();
+    //    }
+    //});
+
+
+    $("#SearchString").keyup(function (event) {
+        //if ($(this).val().length > 2) {
+            $("#CurrentPageIndex").val(0);
+            $("form").submit();
+            //$(this).focus();
+        //}
+    });
+
+    $("#SearchButton").click(function (event) {
+        $("#CurrentPageIndex").val(0);
+        $("form").submit();
+    });
+
+    $(function () {
+        // This will make every element with the class "date-picker" into a DatePicker element
+        $('.date-picker').datepicker();
+        $("#DateFrom").datepicker({ dateFormat: 'd-M-yy' }).val();
+        $("#DateTo").datepicker({ dateFormat: 'd-M-yy' }).val();
+    })
+
+    function Paging() {
+        $("form").submit();
+    }
+</script>

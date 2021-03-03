@@ -1,0 +1,104 @@
+﻿@model IList<MyCard.Web.Models.LicenseDescriptionModel>
+@{
+                /**/
+
+                ViewBag.Title = "Change Description";
+                Layout = "~/Areas/Admin/Views/Shared/_MasterLayoutSuperAdmin.cshtml";
+}
+
+
+
+@using (Html.BeginForm("ChangeDescription", "Default", FormMethod.Post, new { encType = "multipart/form-data" }))
+{
+    <div class="col-md-12">
+        <h3 class="mar-bot15 color-blue book h3-well">Change Descriptions</h3>
+        <br />
+        <table>
+            <tr>
+                <th>License Name</th>
+                <th>Description</th>
+
+            </tr>
+            @if (Model != null)
+            {
+                for (var i = 0; i < Model.Count(); i++)
+                {
+                    <tr>
+                        @Html.HiddenFor(m => Model[i].Id)
+
+                        <td width="250px">@Html.DisplayFor(m => Model[i].LicenseName, new { style = "width:200px" })</td>
+                        <td width="750px">@Html.TextBoxFor(m => Model[i].Description, new { style = "width:500px" })</td>
+
+                    </tr>
+                }
+            }
+
+        </table>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-md-2 ">
+        <div class="">
+            <input type="button" id="UpdateButton" Name="UpdateButton" value="Update" onclick="AsyncConfirmYesNo();" />
+        </div>
+    </div>
+
+
+}
+
+
+<div style="top:25%;" class="modal fade popup_view" id="confirmpopup_view" name="confirmpopup_view">
+    <div class="modal-dialog">
+        <div style="border:none;" class="modal-content">
+            <div class="col-xs-12">
+                <div class="green-bg popup">
+                    @*<div class="col-xs-3"></div>
+                        <div class="col-xs-9">*@
+                    <h4 class="color-white five">@MyCard.Web.Resources.CaptionsAll.ChangeDescriptionConfirmation</h4>
+                    <h4 class="color-white three">
+                        @*@MyCard.Web.Resources.CaptionsAll.DeActivateEmployeeMessage2*@
+                    </h4>
+                    @*</div>*@
+                    <div class="clear"></div>
+                </div>
+                <button type="button" class=" submit small pull-right" id="btnYesConfirmYesNo">Yes <i class=" fa fa-next"></i></button>
+                <button type="button" class=" submit small pull-right mar-right10" id="btnNoConfirmYesNo">No <i class=" fa fa-next"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        //if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        //    return false;
+        //}
+        if (charCode == 46 || (charCode >= 48 && charCode <= 57))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
+    function AsyncConfirmYesNo(elem) {
+        var $confirm;
+        $confirm = $("#confirmpopup_view");
+
+        $confirm.modal('show');
+        $("#btnYesConfirmYesNo").off('click').click(function () {
+            $("form").submit();
+            $confirm.modal("hide");
+        });
+        $("#btnNoConfirmYesNo").off('click').click(function () {
+            $confirm.modal("hide");
+        });
+
+    }
+
+</script>

@@ -1,0 +1,157 @@
+﻿@model MyCard.Web.Models.EmployeeListingViewModel
+@{
+    ViewBag.Title = @MyCard.Web.Resources.CaptionsAll.EmployeeListingTitle;
+    Layout = "~/Views/Shared/_MasterLayoutAdmin.cshtml";
+}
+
+@using (Ajax.BeginForm("EmployeesListing", "CompanyDashboard", new AjaxOptions { HttpMethod = "Post", InsertionMode = InsertionMode.Replace, UpdateTargetId = "EmployeesDiv" }))
+{
+
+    <div class="col-md-12">
+        <h3>Employee Listing</h3>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="">
+                    @Html.TextBoxFor(m => m.SearchString, Model.SearchString, new { @placeholder = "Search employee" })
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="row">
+                    @Html.TextBox("DateFrom", "", new { @placeholder = "From Date" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="">
+                    @Html.TextBox("DateTo", "", new { @placeholder = "To Date" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="">
+                    <input type="button" id="SearchButton" Name="SearchButton" value="Search" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="EmployeesDiv">
+        @Html.Partial("_PartialEmployees", Model)
+
+    </div>
+}
+
+
+<div style="top:25%;" class="modal fade popup_view" id="crosspopup_view" name="crosspopup_view">
+    <div class="modal-dialog">
+        <div style="border:none;" class="modal-content">
+            <div class="col-xs-12">
+                <div class="green-bg popup">
+                    <div class="col-xs-3"><img alt="tick" src="~/img/admin/ask.png" class="img-responsive center-block" /></div>
+                    <div class="col-xs-9">
+                        <h4 class="color-white five"> @MyCard.Web.Resources.CaptionsAll.DeActivateEmployeeMessage1</h4>
+                        <h4 class="color-white three">
+                            @MyCard.Web.Resources.CaptionsAll.DeActivateEmployeeMessage2
+                        </h4>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <button type="button" class=" submit small pull-right" id="btnYesConfirmYesNo">OK <i class=" fa fa-next"></i></button>
+                <button type="button" class=" submit small pull-right mar-right10" id="btnNoConfirmYesNo">Back <i class=" fa fa-next"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    //$(".pager").click(function (evt) {
+    //    var pageindex = $(evt.target).data("pageindex");
+    //    $("#CurrentPageIndex").val(pageindex);
+    //    evt.preventDefault();
+    //    $("form").submit();
+    //});
+    function pagerclick(pindex) {
+        var pageindex = pindex;
+        $("#CurrentPageIndex").val(pageindex);
+        //evt.preventDefault();
+        $("form").submit();
+
+    }
+
+    function PageSizeChange() {
+        $("#CurrentPageIndex").val(0);
+        $("form").submit();
+    }
+
+    $("#SearchString").keyup(function (event) {
+        //if (event.keyCode == 13) {
+            $("#CurrentPageIndex").val(0);
+            $("form").submit();
+        //}
+    });
+
+    $("#SearchButton").click(function (event) {
+        $("#CurrentPageIndex").val(0);
+        $("form").submit();
+    });
+
+    $(function () {
+        // This will make every element with the class "date-picker" into a DatePicker element
+        $('.date-picker').datepicker();
+        $("#DateFrom").datepicker({ dateFormat: 'd-M-yy' }).val();
+        $("#DateTo").datepicker({ dateFormat: 'd-M-yy' }).val();
+    })
+
+    function Paging() {
+        $("form").submit();
+    }
+
+    function backFunction() {
+        $('#crosspopup_view').modal('hide');
+    }
+
+    function showAlert(item) {
+        //$('#crosspopup_view').modal({ backdrop: 'static', keyboard: false });
+        var r = confirm("Are you sure you want to deactivate employee!");
+        if (r == true) {
+            deActivateEmployee(item)
+            //document.getElementById("hfCurrentPageIndex").value = index;
+            //document.forms[0].submit();
+            $("form").submit();
+        }
+        else {
+            alert("You pressed Cancel!");
+        }
+    }
+
+    function deActivateEmployee(elem) {
+        var isDone = 0;
+        var uid = elem;//$(elem).data('itemid');
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("DeactivateEmployee", "CompanyDashboard")',
+        data: { status: isDone,userid:uid },
+        //data: { approved: isDone},
+        success: function(res) {
+            console.log(res);
+        }
+        });
+    }
+
+    function AsyncConfirmYesNo(elem) {
+        var $confirm = $("#crosspopup_view");
+        $confirm.modal('show');
+        $("#btnYesConfirmYesNo").off('click').click(function () {
+            deActivateEmployee(elem);
+            $confirm.modal("hide");
+            Paging();
+        });
+        $("#btnNoConfirmYesNo").off('click').click(function () {
+            $confirm.modal("hide");
+        });
+    }
+
+</script>
+
+
+

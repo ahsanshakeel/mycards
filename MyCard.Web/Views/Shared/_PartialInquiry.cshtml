@@ -1,0 +1,179 @@
+﻿
+@model MyCard.Web.Models.InquiryViewModel
+
+@using (Html.BeginForm("Inquiry", "Registration", FormMethod.Post, new { encType = "multipart/form-data", id = "regform", name = "regform" }))
+{
+    <div class=" col-xs-8">
+        @*<p hidden>@Html.ValidationSummary(false, "", new { @class = "p-small medium red-color" })</p>*@
+        <p>@Html.ValidationMessageFor(model => model.CustomerName, "", new { @class = "p-small medium red-color" })</p>
+        <p>@Html.ValidationMessageFor(model => model.BusinessName, "", new { @class = "p-small medium red-color" })</p>
+        <p>@Html.ValidationMessageFor(model => model.Email, "", new { @class = "p-small medium red-color" })</p>
+        <p id="perror" class="error red-color p-small medium"></p>
+        <p id="pemailerror" class="p-small medium red-color" hidden><i class=" fa fa-times-circle"></i> @MyCard.Web.Resources.ErrorMessages.EmailValid</p>
+        
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-8">
+        @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { placeholder = "Name" } })
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-8">
+        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { placeholder = "Email" } })
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-8">
+        @Html.EditorFor(model => model.BusinessName, new { htmlAttributes = new { placeholder = "Business / Company name" } })
+    </div>
+
+    
+
+   
+    <div class=" col-xs-8">
+        <div class="form">
+            @*<div class="pull-left mar-top15 check-m-top">
+                <div class="squaredChk pull-left">
+                    <input id="chkAcceptTerms" name="chkAcceptTerms" class="hidden" type="checkbox" value="None"> <label id="chkLabel" class="" for="chkAcceptTerms"></label>
+                </div>
+                <label class="pull-left p-small book mar-left5">@MyCard.Web.Resources.CaptionsAll.RegisterIacceptthe <span style="text-decoration:underline; color:#595959;">@MyCard.Web.Resources.CaptionsAll.RegisterTermsOfServices</span></label>
+            </div>*@
+            <div class="pull-right"> <button type="button" class="submit" data-toggle="modal" name="register" id="register">@MyCard.Web.Resources.CaptionsAll.SubmitButton</button> </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+}
+
+
+<div class="modal fade product_view" id="popup_view" name="popup_view">
+    <div class="modal-dialog">
+        <div style="border:none;" class="modal-content">
+            <div class="col-xs-12 row">
+                <div class="green-bg popup row">
+                    <div class="col-xs-2"><img alt="tick" src="~/img/admin/popup-tick.png" class="img center-block" /></div>
+                    <div class="col-xs-10">
+                        <h4 class="color-white bold h4-well24 mar-top15">@MyCard.Web.Resources.CaptionsAll.InquirySuccessMessage1</h4>
+                        <p class="color-white book h4-well24 mar-top5">
+                            @MyCard.Web.Resources.CaptionsAll.InquirySuccessMessage2 <br>
+                           
+                        </p>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <a id="btnNext" href="#" class="row submit f-p medium pull-right">Next <i class="fa fa-chevron-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $('#register').click(function () {
+
+        if ($('#CustomerName').val() == '') {
+            $('#CustomerName').css('border-color', 'red');
+            $('#errornotification').show();
+        }
+        else {
+            $('#CustomerName').css('border-color', '');
+        }
+        ///////////////
+        if ($('#BusinessName').val() == '') {
+            $('#BusinessName').css('border-color', 'red');
+            $('#errornotification').show();
+        }
+        else {
+            $('#BusinessName').css('border-color', '');
+        }
+        //////////////
+        if ($('#Email').val() == '') {
+            $('#Email').css('border-color', 'red');
+            $('#errornotification').show();
+        }
+        else {
+            $('#Email').css('border-color', '');
+        }
+
+        ///////////////
+        if ($('#CustomerName').val() == '' || $('#Email').val() == '' || $('#BusinessName').val() == '') {
+            $('#errornotification').show();
+            return false;
+        }
+        else {
+            $('#errornotification').hide();
+        }
+
+        ///////////////
+        if (!validateEmail($('#Email').val())) {
+            $('#Email').css('border-color', 'red');
+            $('#pemailerror').show();
+            return false;
+        }
+        else {
+            $('#Email').css('border-color', '');
+            $('#pemailerror').hide();
+        }
+
+
+        /////////
+        $('#regform').submit();
+    });
+
+    /////////
+    function validateEmail(sEmail) {
+        var filter = /^[a-zA-Z0-9_.-]+@@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{0,4}$/;
+        if (filter.test(sEmail)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    ///////////////
+    // Handle the form submit event, and make the Ajax request:
+    $("#regform").on("submit", function (event) {
+        event.preventDefault();
+        var url = $(this).attr("action");
+        var formData = $(this).serialize();
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: formData,
+            dataType: "json",
+            success: function (resp) {
+
+                if (resp.success) {
+                    $('#popup_view').modal({ backdrop: 'static', keyboard: false })
+                    $("#perror").text('');
+                }
+                else {
+                    //$('#crosspopup_view').modal({ backdrop: 'static', keyboard: false });
+                    $("#perror").text(resp.responseText);
+
+                }
+            },
+            error: function (response) {
+                //$('#crosspopup_view').modal({ backdrop: 'static', keyboard: false });
+                $("#perror").text(response.responseText);
+            }
+        })
+
+    });
+
+    $('#btnNext').click(function () {
+        //document.location = '@Url.Action("Index", "Registration")';
+        document.location = '@System.Configuration.ConfigurationManager.AppSettings["myCardWeb"]';
+        $('#popup_view').modal('hide');
+        clearform();
+    });
+
+    function clearform()
+    {
+        $('#CustomerName').val('');
+        $('#BusinessName').val('');
+        $('#Email').val('');
+    }
+
+</script>

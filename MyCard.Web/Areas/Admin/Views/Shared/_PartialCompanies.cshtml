@@ -1,0 +1,101 @@
+﻿@model MyCard.Web.Models.CompanyListingViewModel
+
+@{
+    var listItems = new List<SelectListItem>
+{
+    new SelectListItem { Text = "10", Value = "10" },
+    new SelectListItem { Text = "20", Value = "20" },
+    new SelectListItem { Text = "50", Value = "50" },
+    new SelectListItem { Text = "100", Value = "100" }
+};
+}
+
+@{
+    var StatusList = new List<SelectListItem>
+{
+    new SelectListItem { Text = "Select", Value = "" },
+    new SelectListItem { Text = "Approved", Value = "Yes" },
+    new SelectListItem { Text = "Rejected", Value = "No" }
+};
+}
+
+@Html.Hidden("PageCount", Model.PageCount)
+@Html.Hidden("CurrentPageIndex", Model.CurrentPageIndex)
+
+
+<div class="col-md-12">
+    <table class="table table-striped table-bordered table-condensed">
+        <tr>
+            <th>Company Name</th>
+            <th>Domain Name</th>
+            <th>Email</th>
+            <th>Registration Date</th>
+            <th>Total Licenses</th>
+            <th>Industry</th>
+            <th>City</th>
+            <th>Country</th>
+            <th>Account Type</th>
+            @*<th>Customer Type</th>*@
+            @*<th>Status</th>*@
+            <th>Emplyee List</th>
+        </tr>
+
+        @foreach (MyCard.Web.Models.CompanyListViewModel item in Model.Companies)
+        {
+        <tr>
+            @Html.HiddenFor(modelItem => item.CompanyID)
+            <td>@item.CompanyName</td>
+            <td>@item.DomainName</td>
+            <td>@item.EmailID</td>
+            <td>@item.RegistrationDate</td>
+            <td>@item.TotalLicenses</td>
+            <td>@item.Indutry</td>
+            <td>@item.City</td>
+            <td>@item.Country</td>
+            <td>@item.AccountType</td>
+            @*//Commenting as need to comment the Customer Type Freemium/Premium*@
+            @*<td>@item.CustomerType</td>*@
+
+            @*@if (item.CustomerType == "Freemium")
+        {
+            <td>@Html.DropDownListFor(model => item.Approved, new SelectList(StatusList, "Value", "Text", item.Approved), new { @class = "form-control", onChange = "AsyncConfirmYesNo(this);", data_itemid = item.CompanyID })</td>
+        }
+        else
+        {
+            <td></td>
+        }*@
+
+            <td>@Html.ActionLink("Employee List", "CompaniesEmployees", "Default", new { area = "admin", companyId = item.CompanyID }, null)</td>
+        </tr>
+        }
+    </table>
+
+    <div class="col-md-2 row">
+        @Html.DropDownListFor(m => m.PageSize, new SelectList(listItems, "Value", "Text", Model.PageSize), new { @class = "form-control", @placeholder = "Records per Page", onchange = "PageSizeChange()" })
+    </div>
+
+</div>
+<ul class="pager">
+    @for (var i = 0; i < Model.PageCount; i++)
+    {
+        if (i == Model.CurrentPageIndex)
+        {
+            <li><span class="current-pager" id="CurrentPageIndex">@(i + 1)</span></li>
+        }
+        else
+        {
+            <li><a href="#" data-pageindex="@i" class="pager" onclick="pagerclick(@i);">@(i + 1)</a></li>
+        }
+    }
+</ul>
+
+
+
+
+
+
+
+
+
+
+

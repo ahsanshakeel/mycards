@@ -1,0 +1,62 @@
+﻿@if (Request.IsAuthenticated)
+{
+    <nav class="nav-tabs mar-left20 mar-right20">
+        <div class="row">
+            <div class="collapse navbar-collapse mar-top20" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-left">
+                    @if (ViewBag.PageType == "PurchaseUpload" || ViewBag.PageType == "Purchase")
+                    {
+                        <li><a class="active nav-item f-p" href="@Url.Action("Purchase", "CompanyDashboard")">@MyCard.Web.Resources.CaptionsAll.NavBarPurchase</a> </li>
+                    }
+                    else
+                    {
+                        <li><a class="nav-item f-p" href="@Url.Action("Purchase", "CompanyDashboard")">@MyCard.Web.Resources.CaptionsAll.NavBarPurchase</a> </li>
+                    }
+
+                    @if (ViewBag.Designer == "Yes")
+                    {
+                        <li><a class="nav-item f-p" href="@System.Configuration.ConfigurationManager.AppSettings["myCardDesigner"]/@User.Identity.Name.Split('|')[2]/1?id=@User.Identity.Name.Split('|')[3]">@MyCard.Web.Resources.CaptionsAll.NavBarmyCardsDesigner</a> </li>
+                        if (ViewBag.myCardCMS == "Yes")
+                        {
+                            <li><a class="nav-item f-p" href="https://designer.mycards.com/cms/cmsc?cid=@User.Identity.Name.Split('|')[4]">@MyCard.Web.Resources.CaptionsAll.myCardCMS</a> </li>
+                        }
+                    }
+                    else
+                    {
+                        <li><a class="nav-item f-p" href="#">@MyCard.Web.Resources.CaptionsAll.NavBarmyCardsDesigner</a> </li>
+                        if (ViewBag.myCardCMS == "Yes")
+                        {
+                            <li><a class="nav-item f-p" href="#">@MyCard.Web.Resources.CaptionsAll.myCardCMS</a> </li>
+                        }
+                    }
+                    <li><a class="nav-item f-p" href="@Url.Action("Index", "CompanyDashboard")">@MyCard.Web.Resources.CaptionsAll.NavBarmyProfile</a> </li>
+
+
+                </ul>
+                <div class="navbar-form navbar-right signout-top">
+                    <a class=" pull-right btn btn-default signin medium f-p" href="@Url.Action("Logout", "CompanyDashboard")">@MyCard.Web.Resources.CaptionsAll.NaveBarSignOut</a>
+                </div>
+                
+            </div>
+        </div>
+    </nav>
+}
+else
+{
+
+    <nav class="nav-tabs mar-left20 mar-right20">
+        <div class="row">
+            <div class="collapse navbar-collapse mar-top20" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a class="active nav-item f-p" href="@Url.Action("RegistrationForm", "Registration")">@MyCard.Web.Resources.CaptionsAll.NavBarRegister</a> </li>
+                    <li><a class="nav-item f-p" href="@Url.Action("Purchase", "CompanyDashboard")">@MyCard.Web.Resources.CaptionsAll.NavBarPurchase</a> </li>
+                    <li><a class="nav-item f-p" href="@Url.Action("Login", "CompanyDashboard")">@MyCard.Web.Resources.CaptionsAll.NavBarmyCardsDesigner</a> </li>
+                    <li><a class="nav-item f-p" href="@Url.Action("Index", "CompanyDashboard")">@MyCard.Web.Resources.CaptionsAll.NavBarmyProfile</a> </li>
+                </ul>
+                
+            </div>
+        </div>
+    </nav>
+}
+
+

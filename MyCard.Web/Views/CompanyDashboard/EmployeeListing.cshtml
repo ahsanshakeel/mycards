@@ -1,0 +1,219 @@
+﻿@model MyCard.Web.Models.EmployeeListingViewModel
+@{
+    ViewBag.Title = @MyCard.Web.Resources.CaptionsAll.EmployeeListingTitle;
+    Layout = "~/Views/Shared/_MasterLayoutAdmin.cshtml";
+}
+
+@{
+    var listItems = new List<SelectListItem>
+        {
+            new SelectListItem { Text = "10", Value = "10" },
+            new SelectListItem { Text = "20", Value = "20" },
+            new SelectListItem { Text = "50", Value = "50" },
+            new SelectListItem { Text = "100", Value = "100" }
+        };
+}
+
+@using (Html.BeginForm("EmployeeListing", "CompanyDashboard", FormMethod.Post))
+{
+    @Html.Hidden("PageCount", Model.PageCount);
+    @Html.Hidden("CurrentPageIndex", Model.CurrentPageIndex);
+    @Html.Hidden("CompanyID", Model.CompanyID);
+    //@Html.Hidden("SearchString", Model.SearchString);
+    <div class="col-md-12">
+        <h3>Employee Listing</h3>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="">
+                   @Html.TextBoxFor(m => m.SearchString, Model.SearchString, new { @placeholder = "Search employee" })
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="row">
+                    @Html.TextBox("DateFrom", "", new { @placeholder = "From Date" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="">
+                    @Html.TextBox("DateTo", "", new { @placeholder = "To Date" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="">
+                    <input type="button" id="SearchButton" Name="SearchButton" value="Search" />
+                </div>
+            </div>
+        </div>
+
+
+        <table class="table table-striped table-bordered table-condensed">
+            <tr>
+                    <th>Employee Name</th>
+                    <th>Email</th>
+                    <th>Joining Date</th>
+                    <th>Status</th>
+            </tr>
+
+            @foreach (MyCard.Web.Models.EmployeeListViewModel item in Model.EmployeesList)
+            {
+                @Html.HiddenFor(model => item.ID)
+                <tr>
+                    <td>@item.EmployeeName</td>
+                    <td>@item.EmailID</td>
+                    <td>@item.JoiningDate</td>
+                    @if (item.Status == "Deactivated")
+                    {
+                        <td>Deactivated</td>
+                    }
+                    else
+                    {
+                        @*<td><a class="submit" href="#" onclick="showAlert(@item.ID);">Active</a></td>*@
+                        <td><a class="submit center-block" href="#" onclick="AsyncConfirmYesNo(@item.ID);">Activated</a></td>
+                    }
+
+                </tr>
+            }
+        </table>
+        <br />
+
+            <div class="col-md-2 row">
+                @*@Html.DropDownList("RecordsPerPage", listItems, new { @class = "form-control", @placeholder = "Records per Page" })*@
+                @Html.DropDownListFor(m => m.PageSize, new SelectList(listItems, "Value", "Text", Model.PageSize), new { @class = "form-control", @placeholder = "Records per Page", onchange = "PageSizeChange()" })
+            </div>
+        </div>
+        <ul class="pager">
+            @*@if (Model.CurrentPageIndex == 0)
+                {
+                    <li><span class="current-pager" id="CurrentPageIndex">Prev</span></li>
+                }
+                else
+                {
+                    <li><a href="#" data-pageindex="@Model.CurrentPageIndex - 1" class="pager">Prev</a></li>
+                }*@
+
+            @for (var i = 0; i < Model.PageCount; i++)
+                {
+                    if (i == Model.CurrentPageIndex)
+                    {
+                    <li><span class="current-pager" id="CurrentPageIndex">@(i + 1)</span></li>
+                }
+                else
+                {
+                    <li><a href="#" data-pageindex="@i" class="pager">@(i + 1)</a></li>
+                }
+
+            }
+            @*<li><a href="#" id="btnNext">Next</a></li>*@
+        </ul>
+  
+}
+
+
+<div style="top:25%;" class="modal fade popup_view" id="crosspopup_view" name="crosspopup_view">
+    <div class="modal-dialog">
+        <div style="border:none;" class="modal-content">
+            <div class="col-xs-12">
+                <div class="green-bg popup">
+                    <div class="col-xs-3"><img alt="tick" src="~/img/admin/ask.png" class="img-responsive center-block" /></div>
+                    <div class="col-xs-9">
+                        <h4 class="color-white five"> @MyCard.Web.Resources.CaptionsAll.DeActivateEmployeeMessage1</h4>
+                        <h4 class="color-white three">
+                            @MyCard.Web.Resources.CaptionsAll.DeActivateEmployeeMessage2                            
+                        </h4>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <button type="button" class=" submit small pull-right" id="btnYesConfirmYesNo">OK <i class=" fa fa-next"></i></button>
+                <button type="button" class=" submit small pull-right mar-right10" id="btnNoConfirmYesNo">Back <i class=" fa fa-next"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(".pager").click(function (evt) {
+        var pageindex = $(evt.target).data("pageindex");
+        $("#CurrentPageIndex").val(pageindex);
+        evt.preventDefault();
+        $("form").submit();
+    });
+
+    function PageSizeChange() {
+        $("#CurrentPageIndex").val(0);
+        $("form").submit();
+    }
+
+    $("#SearchString").keyup(function (event) {
+        if (event.keyCode == 13) {
+            $("#CurrentPageIndex").val(0);
+            $("form").submit();
+        }
+    });
+
+    $("#SearchButton").click(function (event) {
+        $("#CurrentPageIndex").val(0);
+        $("form").submit();
+    });
+
+    $(function () {
+        // This will make every element with the class "date-picker" into a DatePicker element
+        $('.date-picker').datepicker();
+        $("#DateFrom").datepicker({ dateFormat: 'd-M-yy' }).val();
+        $("#DateTo").datepicker({ dateFormat: 'd-M-yy' }).val();
+    })
+
+    function Paging() {
+        $("form").submit();
+    }
+
+    function backFunction() {
+        $('#crosspopup_view').modal('hide');
+    }
+
+    function showAlert(item) {
+        //$('#crosspopup_view').modal({ backdrop: 'static', keyboard: false });
+        var r = confirm("Are you sure you want to deactivate employee!");
+        if (r == true) {
+            deActivateEmployee(item)
+            //document.getElementById("hfCurrentPageIndex").value = index;
+            //document.forms[0].submit();
+            $("form").submit();
+        }
+        else {
+            alert("You pressed Cancel!");
+        }
+    }
+
+    function deActivateEmployee(elem) {
+        var isDone = 0;
+        var uid = elem;//$(elem).data('itemid');
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("DeactivateEmployee", "CompanyDashboard")',
+        data: { status: isDone,userid:uid },
+        //data: { approved: isDone},
+        success: function(res) {
+            console.log(res);
+        }
+        });
+    }
+
+    function AsyncConfirmYesNo(elem) {
+        var $confirm = $("#crosspopup_view");
+        $confirm.modal('show');
+        $("#btnYesConfirmYesNo").off('click').click(function () {
+            deActivateEmployee(elem);
+            $confirm.modal("hide");
+            Paging();
+        });
+        $("#btnNoConfirmYesNo").off('click').click(function () {
+            $confirm.modal("hide");
+        });
+    }
+    
+</script>
+
+
+

@@ -1,0 +1,36 @@
+﻿@model IEnumerable<MyCard.Web.Models.EmployeeListViewModel>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    
+</head>
+<body>
+    <div> 
+        <table class="table table-striped table-bordered table-condensed">
+            <tr>
+                <th>Employee Name</th>
+                <th>Email</th>
+                <th><span class="text-center center-block">Joining Date</span></th>
+                <th><span class="text-center center-block">Status</span></th>
+            </tr>
+
+            @foreach (MyCard.Web.Models.EmployeeListViewModel item in Model)
+            {
+                @Html.HiddenFor(model => item.ID)
+                <tr>
+                    <td>@item.EmployeeName</td>
+                    <td>@item.EmailID</td>
+                    <td><span class="text-center center-block">@item.JoiningDate</span></td>
+                    <td>@item.Status</td>
+
+                </tr>
+            }
+        </table>
+    </div>
+</body>
+</html>

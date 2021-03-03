@@ -1,0 +1,77 @@
+﻿
+@model MyCard.Web.Models.EmailTemplateViewModel
+@{
+    ViewBag.Title = "EmailComposer";
+    Layout = "~/Areas/Admin/Views/Shared/_MasterLayoutSuperAdmin.cshtml";
+
+}
+<script src="~/scripts/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+    // Initialize your tinyMCE Editor with your preferred options
+    tinymce.init({
+        selector: 'textarea',
+        height: 500,
+        width: 900,
+        branding:false,
+        menubar: false,
+        plugins: [
+            'advlist autolink lists link image charmap print preview anchor textcolor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table contextmenu paste code help wordcount'
+        ],
+        toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | code',
+
+    });
+</script>
+
+<div>
+    @using (Html.BeginForm("SaveEmailTemplate","Default",FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.ID)
+        <div>
+            <div class=" col-xs-5">
+                <div class="row">
+                    @Html.DropDownList("ddlTemplateId", Model.EmailTemplates, new { id = "ddlEmailTemplate" })
+                </div>                                
+            </div>
+            <div class="clearfix"></div>
+            <div class=" col-xs-5">
+                <div class="row">
+                    @Html.TextBoxFor(model => model.Subject)
+                </div>                
+            </div>
+            <div class=" col-xs-4">
+                <button type="submit" class="submit pull-right" style="margin-right: 15%;" name="forgotpassword" id="forgotpassword">Save</button>
+            </div>
+            <div class="clearfix"></div>
+            <div class=" col-lg-5">
+                <div class="row">
+                    @Html.TextAreaFor(model => model.EmailTemplate)
+
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            @*<div class=" col-xs-5">
+                <div class="row">
+                    <div>
+                        <div class="pull-right">
+                         <button type="submit" class="submit" name="forgotpassword" id="forgotpassword">Save</button> </div>
+                    </div>
+                </div>
+            </div>*@
+        </div>
+    }
+</div>
+<div></div>
+<script>
+$(document).ready(function()
+{
+    $("#ddlEmailTemplate").on("change", function()
+    {
+        window.location.href = "/Admin/Default/emailcomposer?id=" + ddlEmailTemplate.value;
+    });
+    });
+    </script>
+

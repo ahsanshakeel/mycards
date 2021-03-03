@@ -1,0 +1,82 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<CSR>
+@using MyCard.WebFront.API.Models;
+@{
+    Layout = null;
+    IPublishedContent csrBannerImage = Model.Content.CSrbannerImage;
+    IPublishedContent ourMissionImage = Model.Content.MissionImage;
+}
+
+<html>
+<head>
+    <link href="~/css/bootstrap.css" rel="stylesheet">
+    <link href="~/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    @Html.Partial("Navigation", (IPublishedContent)Model.Content)
+
+    <section class="my-card">
+        <img class=" img-responsive" alt="product" src="@csrBannerImage.Url">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 col-sm-6 banner-text">
+                    <div class="align-left">
+                        @Model.Content.CSrbannerImageText
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section pad-top40 pad-bot40 gray-bg">
+        <div class="container">
+            <div class="align-center pad-top40 pad-bot40 col-md-offset-2 col-md-8">
+                <img class="img-responsive center-block mar-top40" src="@ourMissionImage.Url"> <br>
+                @Model.Content.OurMissionText
+            </div>
+        </div>
+    </section>
+
+    <section class="section pad-top40 pad-bot40 green-bg">
+        <div class="container">
+            <div class="align-center pad-top40 pad-bot40 col-md-12">
+                <br>
+                <h2 class="color-white three book">@Model.Content.ChallengesHeading</h2>
+                <br>
+                <div class="col-lg-12">
+                    @{
+                        var challenges = Model.Content.Challenges.ToList();
+                        foreach (var challenge in challenges)
+                        {
+                            var challengeImage = challenge.GetPropertyValue<IPublishedContent>("challengeImage");
+                            var challengeHeading = challenge.GetPropertyValue<string>("challengeTitle");
+                            var challengeText = challenge.GetPropertyValue<string>("challengeDescription");
+                            <div class="col-sm-4">
+                                <img class="center-block img-responsive" src="@challengeImage.Url">
+                                <h4 class="color-white bold">@challengeHeading</h4>
+                                @challengeText
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="my-card">
+        <img class=" img-responsive" alt="product" src="@Model.Content.GreenImage.Url">
+        @Model.Content.GreenText
+    </section>
+
+    <div class="container">
+        @Model.Content.SolutionText
+    </div>
+
+    <section class="section pad-top40 pad-bot40 green-bg">
+        @Model.Content.GeneralText
+    </section>
+    @Html.Partial("ContactSection", (IPublishedContent)Model.Content)
+    <script src="~/scripts/jquery.js"></script>
+    <script src="~/scripts/bootstrap.js"></script>
+</body>
+</html>

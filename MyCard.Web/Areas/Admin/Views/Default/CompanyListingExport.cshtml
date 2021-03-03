@@ -1,0 +1,40 @@
+﻿@model IEnumerable<MyCard.Web.Models.CompanyListViewModel>
+@{
+    Layout = null;
+}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ExportView</title>
+</head>
+<body>
+    <div>
+
+        <table class="table table-striped table-bordered table-condensed">
+            <tr>
+                <th>Company Name</th>
+                <th>Domain Name</th>
+                <th>Email</th>
+                <th>Registration Date</th>
+                <th>Total Licenses</th>
+
+            </tr>
+
+            @foreach (MyCard.Web.Models.CompanyListViewModel item in Model)
+            {
+                <tr>
+                    @Html.HiddenFor(modelItem => item.CompanyID)
+                    <td>@item.CompanyName</td>
+                    <td>@item.DomainName</td>
+                    <td>@item.EmailID</td>
+                    <td>@item.RegistrationDate</td>
+                    <td>@item.TotalLicenses</td>
+
+                </tr>
+            }
+
+        </table>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    
+    var heading = Model.Content.GetPropertyValue<string>("customerSupportTitle", true);
+    var customerSupport = Model.Content.GetPropertyValue<IHtmlString>("customerSupport", true);
+    var technicalSupport = Model.Content.GetPropertyValue<IHtmlString>("technicalSupport", true);
+    var investorRelation = Model.Content.GetPropertyValue<IHtmlString>("investorRelation", true);
+}
+
+<footer id="footer">
+    <div class="container mar-top40 footer-section">
+        <div class="mar-top40 mar-bot40">
+            <h2>@heading</h2>
+        </div>
+        <br>
+        <div class="col-md-3 col-sm-6 pad-bot30">
+            @customerSupport
+        </div>
+        <div class="col-md-3 col-sm-6 pad-bot30">
+            @technicalSupport
+        </div>
+        <div class="col-md-3 col-sm-6 pad-bot30">
+            @investorRelation
+    </div>
+    <div class="col-md-3 col-sm-6 pad-bot30">
+        <h4>Model.Content</h4>
+        <div class="bg-white">
+            <ul class="list-unstyled">
+                <li class="pull-left mar-right10"><a href="#"><img alt="" src="img/icon-fb.png"></a></li>
+                <li class="pull-left mar-right10"><a href="#"><img alt="" src="img/icon-twitter.png"></a></li>
+                <li class="pull-left"><a href="#"><img alt="" src="img/icon-linkedin.png"></a></li>
+            </ul>
+            <br>
+            <br>
+            <span class="f-p bold">Coming soon!</span><br>
+            <span class="f-p">
+                Watch this space for <br>
+                exciting updates from our<br>
+                social media feeds.
+            </span><br>
+        </div>
+    </div>
+</div>
+    </footer>

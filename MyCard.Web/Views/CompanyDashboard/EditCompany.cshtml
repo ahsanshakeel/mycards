@@ -1,0 +1,244 @@
+﻿@model MyCard.Web.Models.CompanyEditViewModel
+
+@{
+    ViewBag.Title = @MyCard.Web.Resources.CaptionsAll.EditCompany;
+    Layout = "~/Views/Shared/_MasterLayoutCompany.cshtml";
+}
+
+    @using (Html.BeginForm("EditCompany", "CompanyDashboard", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+        <br/>
+        <div class=" col-xs-12">
+
+            <div id="divRegForm" class="signin-form ">
+                <div class=" col-xs-5">
+                    <div class="row">
+                        @*<p class="red-color four" hidden>@Html.ValidationSummary(false, "", new { @style = "color:red" })</p>*@
+                        <p id="errornotification" class="p-small medium red-color" hidden><i class=" fa fa-times-circle"></i> @MyCard.Web.Resources.ErrorMessages.MandatoryFields</p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class=" col-xs-5">
+                    <div class="row">
+                        @if (ViewBag.myCardCMSEdit == "Yes")
+                        {
+                            @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { placeholder = "Name"} })
+                        }
+                        else
+                        {
+                            @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { placeholder = "Name", @readonly = "readonly", @class = "color-gray-cc" } })
+                        }
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                
+                <div class=" col-xs-5">
+                    <div class="row">
+                        @if (ViewBag.myCardCMSEdit == "Yes")
+                        {
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { placeholder = "Company Name" } })
+                        }
+                        else
+                        {
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { placeholder = "Company Name", @readonly = "readonly", @class = "color-gray-cc" } })
+                        }
+
+
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class=" col-xs-5">
+                    <div class="row">
+                        @Html.EditorFor(model => model.EmailID, new { htmlAttributes = new { placeholder = "Email", @readonly = "readonly", @class = "color-gray-cc" } })
+                
+
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                    
+                <div class=" col-xs-5">
+                    <div class="row">
+                        @if (ViewBag.myCardCMSEdit == "Yes")
+                        {
+                            @Html.EditorFor(model => model.DomainName, new { htmlAttributes = new { placeholder = "Domain Name" } })
+                        }
+                        else
+                        {
+                            @Html.EditorFor(model => model.DomainName, new { htmlAttributes = new { placeholder = "Domain Name", @readonly = "readonly", @class = "color-gray-cc" } })
+                        }
+
+
+
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+
+                <div class=" col-xs-5" hidden>
+                    <div class="row">
+                        @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { placeholder = "Phone Number (00XX)(XX)(XXXXXXX)" } })
+
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class=" col-xs-5" hidden>
+                    <div class="row">
+                        @Html.EditorFor(model => model.Address, new { htmlAttributes = new { placeholder = "Address" } })
+
+                    </div>
+                </div>
+                @*<div class="col-xs-7"><p class="red-color">@Html.ValidationMessageFor(model => model.Address)</p></div>*@
+                <div class="clearfix"></div>
+
+                <div class=" col-xs-5" hidden>
+                    <div class="row">
+                        @Html.EditorFor(model => model.City, new { htmlAttributes = new { placeholder = "City" } })
+
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class=" col-xs-5" hidden>
+                    <div class="row">
+                        @Html.EditorFor(model => model.State, new { htmlAttributes = new { placeholder = "State" } })
+
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                <div class=" col-xs-5" hidden>
+                    <div class="row">
+                        @Html.EditorFor(model => model.Zip, new { htmlAttributes = new { placeholder = "Zip" } })
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                @Html.HiddenFor(mode => Model.CompanyLogo)
+
+                <div class=" col-xs-5">
+                    <div class=" col-xs-5">
+                        <img class="img-responsive" src="@Url.Action("GetCompanyLogoImage", "CompanyDashboard")" alt="" />
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="row">
+                        <p id="pselectfileerror" name="perror" class="error p-small medium red-color" hidden>@MyCard.Web.Resources.ErrorMessages.EditCompanyLogoFileType</p>
+                        Upload new image (jpg or png formats only): <input type="file" id="file" name="file" />
+                    </div>
+                </div>
+                @*<div class="col-xs-7"><p class="red-color"></p></div>*@
+                <div class="clearfix"></div>
+
+                <div class=" col-xs-5">
+                    <div class="row">
+                        <div class="col-xs-offset-6 col-xs-3">
+                            <div class=" row">
+                                <div>
+                                    <div class="pull-right"> <button id="cancelButton" type="button" class="submit" >@MyCard.Web.Resources.CaptionsAll.CompanyEditCancelButton</button> </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" col-xs-3">
+                            <div class="row">
+                                <div>
+                                    <div class="pull-right"> <button type="submit" class="submit" name="savebtn" id="savebtn">@MyCard.Web.Resources.CaptionsAll.SaveButton</button> </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="col-xs-7"><p class="red-color"></p></div>*@
+                <div class="clearfix"></div>
+                @*<br />
+                <div class=" col-xs-5">
+                    <div class="row">
+                        <p class="mar-top0 book f-p-medium">@MyCard.Web.Resources.CaptionsAll.EditCompanyChangePassword <a href="@Url.Action("ChangePassword", "CompanyDashboard")" class="bold color-blue"> @MyCard.Web.Resources.CaptionsAll.EditCompanyChangePasswordClick</a> </p>
+                    </div>
+                </div>
+                <div class="clearfix"></div>*@
+        </div>
+    </div>
+                }
+
+                @*@ViewBag.Message*@
+<script>
+    var file = document.getElementById('file');
+
+    file.onchange = function (e) {
+        var ext = this.value.match(/\.([^\.]+)$/)[1];
+        switch (ext) {
+            case 'jpg':
+            case 'png':
+                $('#pselectfileerror').hide();
+                break;
+            default:
+                $('#pselectfileerror').show();
+                this.value = '';
+                return false;
+        }
+    };
+
+    $('#cancelButton').click(function () {
+        document.location = '@Url.Action("Index", "CompanyDashboard")';
+    });
+
+    $(document).ready(function () {
+        // Attach click handler to the submit button:
+        $('#savebtn').click(function () {
+            //if ($('#Phone').val() == '') {
+            //    $('#Phone').css('border-color', 'red');
+            //    $('#errornotification').show();
+            //}
+            //else {
+            //    $('#Phone').css('border-color', '');
+            //}
+            /////////////////
+            //if ($('#Address').val() == '') {
+            //    $('#Address').css('border-color', 'red');
+            //    $('#errornotification').show();
+            //}
+            //else {
+            //    $('#Address').css('border-color', '');
+            //}
+            ////////////////
+            //if ($('#City').val() == '') {
+            //    $('#City').css('border-color', 'red');
+            //    $('#errornotification').show();
+            //}
+            //else {
+            //    $('#City').css('border-color', '');
+            //}
+            /////////////////
+            //if ($('#State').val() == '') {
+            //    $('#State').css('border-color', 'red');
+            //    $('#errornotification').show();
+            //}
+            //else {
+            //    $('#State').css('border-color', '');
+            //}
+            /////////////////
+            //if ($('#Zip').val() == '') {
+            //    $('#Zip').css('border-color', 'red');
+            //    $('#errornotification').show();
+            //}
+            //else {
+            //    $('#Zip').css('border-color', '');
+            //}
+            /////////////////
+            //if ($('#Phone').val() == '' || $('#Address').val() == '' || $('#City').val() == '' || $('#State').val() == '' || $('#Zip').val() == '') {
+            //    $('#errornotification').show();
+            //    return false;
+            //}
+            //else {
+            //    $('#errornotification').hide();
+            //}
+
+            /////////
+            $("form").submit();
+        });
+    });
+</script>

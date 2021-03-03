@@ -1,0 +1,84 @@
+﻿@model MyCard.Web.Models.ResendLinkViewModel
+@{
+    ViewBag.Title = @MyCard.Web.Resources.CaptionsAll.ResendLinkTitle;
+    Layout = "~/Views/Shared/_MasterLayoutAdmin.cshtml";
+}
+
+<div>
+    @using (Html.BeginForm("ResendLink", "CompanyDashboard"))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class=" col-xs-12">
+            <div class=" col-xs-5">
+                <div class="row">
+                    @*<p hidden>@Html.ValidationSummary(false, "", new { @class = "p-small medium red-color" })</p>*@
+                    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessageAlreadyActivated))
+                    {
+                        <p id="errornotification1" class="red-color p-small medium"><i class=" fa fa-times-circle"></i> @ViewBag.ErrorMessageAlreadyActivated <a href="@Url.Action("Login", "CompanyDashboard")" class="bold color-blue">@MyCard.Web.Resources.ErrorMessages.AlreadyActivatedLogin</a></p>
+                    }
+                    @if (string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                    {
+                        <p id="errornotification" class="red-color p-small medium" hidden><i class=" fa fa-times-circle"></i> @MyCard.Web.Resources.ErrorMessages.MandatoryFields</p>
+                    }
+                    else
+                    {
+                        <p id="errornotification" class="red-color p-small medium"><i class=" fa fa-times-circle"></i> @ViewBag.ErrorMessage</p>
+                    }
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class=" col-xs-5">
+                <div class="row">
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { placeholder = "email" } })
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class=" col-xs-5">
+                <div class="row">
+                    <div>
+                        <div class="pull-right"> <button type="button" class="submit" name="resendlinkbtn" id="resendlinkbtn">@MyCard.Web.Resources.CaptionsAll.ForgotPasswordButton</button> </div>
+                    </div>
+                </div>
+            </div>
+            @*<div>
+                    <div>
+                        <input type="submit" value="@MyCard.Web.Resources.CaptionsAll.ForgotPasswordButton" />
+                    </div>
+                </div>*@
+        </div>
+    }
+    <div class=" col-xs-12">
+        <div class=" col-xs-5">
+            <div class="row">
+                @ViewBag.Message
+            </div>
+        </div>
+    </div>
+
+</div>
+@*<div>@ViewBag.ErrorMessage</div>*@
+<script type="text/javascript">
+
+                $(document).ready(function () {
+
+                    // Attach click handler to the submit button:
+                    $('#resendlinkbtn').click(function () {
+                        if ($('#Email').val() == '') {
+                            $('#Email').css('border-color', 'red');
+                            $('#errornotification').show();
+                        }
+                        else {
+                            $('#Email').css('border-color', '');
+                        }
+
+                        ///////////////
+
+                        $("form").submit();
+                    });
+
+                });
+</script>
+

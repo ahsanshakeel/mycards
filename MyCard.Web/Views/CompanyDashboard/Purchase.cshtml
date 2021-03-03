@@ -1,0 +1,385 @@
+﻿@model MyCard.Web.Models.PurchaseLicenseViewModel
+@{
+    ViewBag.Title = @MyCard.Web.Resources.CaptionsAll.PurchaseLicense;
+    Layout = "~/Views/Shared/_MasterLayoutPurchase.cshtml";
+}
+
+<div class="col-xs-12 m-top2">
+    <div class="col-sm-8">
+        <div class="signin-form ">
+            @*<p class="mar-bot20 book f-p">@MyCard.Web.Resources.CaptionsAll.PurchaseEnterLicenses</p>*@
+
+
+            @using (Html.BeginForm("Purchase", "CompanyDashboard", FormMethod.Post, new { encType = "multipart/form-data", id = "orderform", name = "orderform" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <div class="show cv">
+                    <div class="clearfix"></div>
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <p id="errornotification1" class="red-color p-small medium" hidden><i class=" fa fa-times-circle"></i>@MyCard.Web.Resources.ErrorMessages.PurchaseLicenseTypeError</p>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div>
+                        @foreach (MyCard.Web.Models.LicenseTypeModel item in Model.LicenseTypes)
+                        {
+                            <div class="reg">
+                                <bdo>
+                                    @Html.RadioButtonFor(x => x.LicenseTypeId, item.Id, new { @style = "float:left; width:20px;" })
+                                    <span></span>
+                                    <abbr> @item.LicenseTypeName (&#36;@item.Price) </abbr>
+                                </bdo>
+                            </div>
+                        }
+                    </div>
+                    <div class="clear"></div>
+                    <div class="col-sm-6">
+                        <div class="row bb"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class=" col-sm-6 bb p-insert">
+                        <div class="row">
+                            <p class="mar-bot10 f-p book mar-bot15">@MyCard.Web.Resources.CaptionsAll.PurchaseInsertLicense</p>
+                            @Html.TextBoxFor(model => model.NoOfLicense, new { @class = "l-input book", @onkeypress = "return isNumber(event)" })
+                            <button class="btn btn-default calculate medium" type="button" name="Calculate" id="Calculate">@MyCard.Web.Resources.CaptionsAll.CalculateButton</button>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <div class="col-sm-6 mar-top5 bb pad-bot10">
+                        <div class="row mar-top5">
+                            <p class="f-p book">@MyCard.Web.Resources.CaptionsAll.PurchaseTotalCost</p>
+                            <h2 id="totalprice" name="totalprice" class="book mar-bot5"></h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="hide manageclass">
+                    <div class=" col-sm-6 bb p-insert">
+                        <div class="row">
+                            <p class="mar-bot10 f-p book mar-bot15">Name</p>
+                            <input type="text" class="form-control" id="name" name="name" style="height: 45px;"  placeholder="Enter Name..."/>
+                        </div>
+                    </div>
+                    <div class="clearfix" style="visibility:hidden!important"></div>
+                    <div class=" col-sm-6 bb p-insert">
+                        <div class="row">
+                            <p class="mar-bot10 f-p book mar-bot15">Email</p>
+                            <input type="text" class="form-control" id="Email" name="Email" style="height: 45px;"required placeholder="Enter Email..."/>
+                        </div>
+                    </div>
+                    <div class="clearfix"  style="visibility:hidden!important"></div>
+                    <div class=" col-sm-6 bb p-insert" style="padding-left: 29px;width: 300px;">
+                        <div class="row">
+                            <div class="row">
+                                <p class="mar-bot10 f-p book mar-bot15">Company Name</p>
+                                <input type="text" class="form-control" id="companyname" name="companyname" style="height:50px;"  placeholder="Enter Company Name..."/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-md-1 bb p-insert" style="padding-left:45px;padding-top: 13px;">
+                        <div class="row">
+                            <p class="mar-bot10 f-p book mar-bot15" style="visibility:hidden">Name</p>
+                            <input type="submit" value="Submit" onclick="sendemail();" class="btn btn-success" style="width:72px!important" />
+                        </div>
+                    </div>
+                    <div class=" col-md-1 bb p-insert" style="padding-left:80px;padding-top: 13px;">
+                        <div class="row">
+                            <p class="mar-bot10 f-p book mar-bot15" style="visibility:hidden">Name</p>
+                            <input type="submit" value="Close" id="closediv" onclick="closedivs();" class="btn btn-success" style="width:65px!important" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mar-top15">
+                    <div class="row">
+                        @*<p class="f-p book show cv">@MyCard.Web.Resources.CaptionsAll.PurchaseClickConfirm</p>*@
+                        <div class="mar-top15" style="width: 899px;">
+                            @*<button type="button" id="submit" name="submit" class="submit f-p">@MyCard.Web.Resources.CaptionsAll.PurchaseButtonConfirm</button>*@
+                            <button type="button" id="submit" name="submit" class="submit f-p" onclick="showdiv();">Bank 2 Bank</button>
+                            <button type="button" id="sendreqiests" name="submit" class="submit f-p" onclick="sendRequest();">Pay via Microsoft Marketplace</button>
+                            <button type="button" id="submit" name="submit" class="submit f-p" onclick="paytimepayment();">Pay via Credit Card</button>
+                        </div>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+<div class="modal fade product_view" id="popup_view" name="popup_view">
+    <div class="modal-dialog">
+        <div style="border:none;" class="modal-content">
+            <div class="col-xs-12 row">
+                <div class="green-bg popup row">
+                    <div class="col-xs-2"><img alt="tick" src="~/img/admin/popup-tick.png" class="img center-block" /></div>
+                    <div class="col-xs-10">
+                        @*<h4 class="color-white bold h4-well24 mar-top15">@MyCard.Web.Resources.CaptionsAll.PurchaseSuccessMessage1</h4>*@
+                        <p class="color-white book h4-well24 mar-top15">@MyCard.Web.Resources.CaptionsAll.PurchaseSuccessMessage1</p>
+                        <p class="color-white book h4-well24 ">
+                            @MyCard.Web.Resources.CaptionsAll.PurchaseSuccessMessage2
+                        </p>
+                        <p class="color-white book h4-well24">
+                            @MyCard.Web.Resources.CaptionsAll.PurchaseSuccessMessage3
+                        </p>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <a href="@Url.Action("UploadPO", "CompanyDashboard")" class="row submit f-p medium pull-right">@MyCard.Web.Resources.CaptionsAll.PurchasePopupButtonNext <i class="fa fa-chevron-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function paytimepayment()
+    {
+        debugger
+
+        var LicenseTypeIds = $('#LicenseTypeId:checked').val();
+        var price = licensePrice(LicenseTypeIds);
+        var licenses = $('#NoOfLicense').val();
+        var totalcost = licenses * price;
+        $.ajax({
+            url: "/CompanyDashboard/PayTimeAPiAsync",
+            type: 'Post',
+            data: { totalCosts: totalcost, totallicenses: licenses, LicenseTypeId: LicenseTypeIds },
+            dataType: 'json',
+        error: function (xhr, error) {
+        },
+        success: function (response) {
+
+            window.location = response;
+        }
+
+        });
+    }
+            function licensePrice(lid)
+        {
+            var price = 0;
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("LicensePrice", "CompanyDashboard")',
+                data: { LicenseId: lid },
+                //contentType: 'application/json; charset=utf-8',
+                //dataType: 'json',
+                async:false,
+                success: function (res) {
+                    price = res.Price;
+                    console.log(res);
+                }
+            });
+
+            return price;
+        }
+</script>
+<script>
+    function sendRequest()
+    {
+        var loc = "https://login.microsoftonline.com/common/adminconsent?client_id=f45dea0f-d778-4ed9-9423-2a47223d6fc5&state=12345&redirect_uri=";
+        var reditrect = "https://localhost:44305/Home/authresponse";
+        var complete_url = loc + reditrect;
+        alert(complete_url);
+        window.location.href = complete_url;
+        //debugger
+        //    var formData = new FormData();
+        //var value = "2";
+        //    formData.append("Value", value);
+        //    $.ajax({
+        //        type: "POST",
+        //        url: '/SaasMarketApi/IndexAsync',
+        //        data: formData,
+        //        dataType: 'json',
+        //        contentType: false,
+        //        processData: false,
+        //        success: function (data) {
+        //        },
+        //        error: function (error) {
+        //            //TODO: Add some code here for error handling or notifications
+        //        }
+        //    });
+    }
+</script>
+<script type="text/javascript">
+    function sendemail() {
+        debugger
+        var emails = $("#Email").val();
+        if (emails == "") {
+        }
+        else {
+            var formData = new FormData();
+            var name = $("#name").val();
+            formData.append("Name", name);
+            var email = $("#Email").val();
+            formData.append("Email", email);
+            var companyname = $("#companyname").val();
+            formData.append("CompanyName", companyname);
+            $.ajax({
+                type: "POST",
+                url: '/Registration/Send_Email',
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    var name = $("#name").val('');
+                    var email = $("#Email").val('');
+                    var companyname = $("#companyname").val('');
+                    $(".cv").removeClass("hide");
+                    $(".cv").addClass("show");
+                    $(".manageclass").addClass("hide");
+                },
+                error: function (error) {
+                    //TODO: Add some code here for error handling or notifications
+                }
+            });
+        }
+       }
+</script>
+<script>
+    function showdiv()
+    {
+        $(".cv").removeClass("show");
+        $(".cv").addClass("hide");
+        $(".manageclass").removeClass("hide");
+    }
+    function closedivs() {
+        $(".cv").removeClass("hide");
+        $(".cv").addClass("show");
+                    $(".manageclass").addClass("hide");
+                }
+</script>
+<script>
+    //function nextFunction() {
+    //    $('#popup_view').modal({ backdrop: 'static', keyboard: false });
+    //}
+
+    function backFunction() {
+        $('#crosspopup_view').modal('hide');
+    }
+
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+    $(document).ready(function () {
+
+        $('#Calculate').click(function () {
+            if (!$('input:radio[name=LicenseTypeId]').is(':checked')) {
+                $('#errornotification1').show();
+                $('#LicenseTypeId').css('border-color', 'red');
+                return false;
+            }
+            else {
+                $('#errornotification1').hide();
+                $('#LicenseTypeId').css('border-color', '');
+            }
+
+            $('#errornotification').hide();
+            $('#Calculate').css('border-color', '');
+            if ($('#NoOfLicense').val() == '' || $('#NoOfLicense').val() <= 0) {
+                $('#NoOfLicense').css('border-color', 'red');
+                return false;
+            }
+            else {
+                $('#NoOfLicense').css('border-color', '');
+            }
+            var licenses = $('#NoOfLicense').val();
+
+
+            //var lid = $('#LicenseTypeId').val();
+            //var lid = $("input[name='LicenseTypeId']:is('checked')").val();
+            var lid = $('#LicenseTypeId:checked').val();
+            var price = licensePrice(lid);
+
+            //var totalcost = licenses * @ViewBag.Price;
+            var totalcost = licenses * price;
+            //var formattedTotal = parseFloat(totalcost).toFixed(2);
+            $('#totalprice').text("USD " + totalcost.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }));
+        })
+
+        function licensePrice(lid)
+        {
+            var price = 0;
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("LicensePrice", "CompanyDashboard")',
+                data: { LicenseId: lid },
+                //contentType: 'application/json; charset=utf-8',
+                //dataType: 'json',
+                async:false,
+                success: function (res) {
+                    price = res.Price;
+                    console.log(res);
+                }
+            });
+
+            return price;
+        }
+
+        $('#submit').click(function () {
+            if ($('#NoOfLicense').val() == '' || $('#NoOfLicense').val() <= 0) {
+                $('#NoOfLicense').css('border-color', 'red');
+                return false;
+            }
+            else {
+                $('#NoOfLicense').css('border-color', '');
+            }
+
+            if ($('#totalprice').text() == "") {
+                $('#Calculate').css('border-color', 'red');
+                $('#errornotification').show();
+                return false;
+            }
+
+            $('#orderform').submit();
+
+        });
+
+        $('#NoOfLicense').change(function () {
+            if ($('#NoOfLicense').val() == '' || $('#NoOfLicense').val() <= 0) {
+                $('#NoOfLicense').css('border-color', 'red');
+                $('#totalprice').text('');
+            }
+            else {
+                $('#NoOfLicense').css('border-color', '');
+            }
+        });
+
+        $("#orderform").on("submit", function (event) {
+            event.preventDefault();
+            var url = $(this).attr("action");
+            var formData = $(this).serialize();
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: formData,
+                dataType: "json",
+                success: function (resp) {
+                    if (resp.success) {
+                        //$('#popup_view').modal('show');
+                        $('#popup_view').modal({ backdrop: 'static', keyboard: false })
+                    }
+                    else {
+                        //$('#crosspopup_view').modal({ backdrop: 'static', keyboard: false });
+                    }
+                },
+                error: function (response) {
+                    //alert("error!");  //
+                    //$('#crosspopup_view').modal({ backdrop: 'static', keyboard: false });
+                }
+            })
+            //$('#popup_view').modal({ backdrop: 'static', keyboard: false });
+        });
+    });
+</script>

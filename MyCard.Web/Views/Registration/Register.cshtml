@@ -1,0 +1,573 @@
+﻿@model MyCard.Web.Models.RegistrationViewModel
+@{
+    ViewBag.Title = @MyCard.Web.Resources.CaptionsAll.RegistrationTitle;
+    Layout = "~/Views/Shared/_MasterLayoutAdmin.cshtml";
+}
+
+@{
+    var citieslist = new List<SelectListItem>
+{
+new SelectListItem { Text = "--Choose City--", Value = "--Choose City--" },
+
+};
+}
+
+@{
+    var industrylist = new List<SelectListItem>
+{
+new SelectListItem { Text = "Accounting", Value = "Accounting" },
+new SelectListItem { Text = "Airlines/Aviation", Value = "Airlines/Aviation" },
+new SelectListItem { Text = "Alternative Dispute Resolution", Value = "Alternative Dispute Resolution" },
+new SelectListItem { Text = "Alternative Medicine", Value = "Alternative Medicine" }
+};
+}
+
+
+@{
+    var countrieslist = new List<SelectListItem>
+{
+new SelectListItem { Text = "Pakistan", Value = "Pakistan" },
+new SelectListItem { Text = "America", Value = "America" },
+new SelectListItem { Text = "UAE", Value = "UAE" },
+new SelectListItem { Text = "Saudi Arabia", Value = "Saudi Arabia" }
+};
+}
+
+<div class=" col-xs-7">
+    <p class="mar-bot20 book f-p" hidden>@MyCard.Web.Resources.CaptionsAll.RegistrationFillDetails</p><br>
+    <p id="errornotification" class="p-small medium red-color" hidden><i class=" fa fa-times-circle"></i> @MyCard.Web.Resources.ErrorMessages.MandatoryFields</p>
+    <div class="clearfix"></div>
+</div>
+<p>@Html.ValidationMessage("ErrMsg")</p>
+<p>@ViewBag.MyMessage</p>
+
+@using (Html.BeginForm("Register", "Registration", FormMethod.Post, new { encType = "multipart/form-data", id = "regform", name = "regform" }))
+{
+    @*@Html.AntiForgeryToken()*@
+    @Html.HiddenFor(x => x.CustomerType)
+
+    <div class=" col-xs-8">
+        @*<p hidden>@Html.ValidationSummary(false, "", new { @class = "p-small medium red-color" })</p>*@
+        <p>@Html.ValidationMessageFor(model => model.CustomerName, "", new { @class = "p-small medium red-color" })</p>
+        <p>@Html.ValidationMessageFor(model => model.Name, "", new { @class = "p-small medium red-color" })</p>
+        @*<p>@Html.ValidationMessageFor(model => model.BusinessTitle, "", new { @class = "p-small medium red-color" })</p>*@
+        <p>@Html.ValidationMessageFor(model => model.EmailID, "", new { @class = "p-small medium red-color" })</p>
+        <p>@Html.ValidationMessageFor(model => model.DomainName, "", new { @class = "p-small medium red-color" })</p>
+        <p id="perror" class="error red-color p-small medium"></p>
+        <p id="pemailerror" class="p-small medium red-color" hidden><i class=" fa fa-times-circle"></i> @MyCard.Web.Resources.ErrorMessages.EmailValid</p>
+        <p id="pdomainerror" class="p-small medium red-color" hidden><i class=" fa fa-times-circle"></i> @MyCard.Web.Resources.ErrorMessages.DomainValid</p>
+        <p id="termsError" class="p-small medium red-color" hidden><i class=" fa fa-times-circle"></i> @MyCard.Web.Resources.ErrorMessages.TermsAcceptError</p>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-8">
+        @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { placeholder = "Name" } })
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="col-xs-8">
+        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { placeholder = "Company name" } })
+    </div>
+
+    <div class=" col-xs-8" hidden>
+        @Html.EditorFor(model => model.BusinessTitle, new { htmlAttributes = new { placeholder = "Business title" } })
+    </div>
+
+    <div class=" col-xs-8">
+        @Html.EditorFor(model => model.EmailID, new { htmlAttributes = new { placeholder = "Business email" } })
+        @Html.HiddenFor(model => model.DomainName)
+    </div>
+    
+    <div class="col-xs-8">
+        @Html.DropDownListFor(m => m.Industry, new SelectList(industrylist, "Value", "Text", Model.Industry), new { @id = "DropDownListIndustries", @class = "s-input", @placeholder = "Industry", @style = "width: 100%; padding: 8px 10px;    border-radius: 4px;  border: 1px solid #cccccc; margin-bottom: 15px; height: 40px;" })
+    </div>
+
+
+    @*<div class="col-xs-8">
+            @Html.DropDownListFor(m => m.Country, (IEnumerable<SelectListItem>)ViewBag.countrieslist, new { onchange = "getCities()", id = "DropDownListCountry", @class = "s-input", @placeholder = "Country" })
+        </div>*@
+
+    <div class="col-xs-8">
+        @Html.DropDownListFor(m => m.Country, new SelectList(countrieslist, "Value", "Text", Model.Country), new { onchange = "getCities()", id = "DropDownListCountry", @class = "s-input", @placeholder = "Country", @style = "width: 100%; padding: 8px 10px;    border-radius: 4px;  border: 1px solid #cccccc; margin-bottom: 15px; height: 40px;" })
+    </div>
+
+    <div class="col-xs-8">
+        @Html.DropDownListFor(m => m.City, new SelectList(citieslist, "Value", "Text", Model.Country), new { id = "DropDownListCities", @class = "s-input", @placeholder = "City", @style = "width: 100%; padding: 8px 10px;    border-radius: 4px;  border: 1px solid #cccccc; margin-bottom: 15px; height: 40px;" })
+    </div>
+
+    @*<div class="col-xs-8">
+            @Html.DropDownListFor(m => m.City, new SelectList(citieslist, "Value", "Text", Model.Country), new { id = "DropDownListCities", @class = "s-input", @placeholder = "City", @style = "width: 100%; padding: 8px 10px;    border-radius: 4px;  border: 1px solid #cccccc; margin-bottom: 15px; height: 40px;" })
+        </div>*@
+
+    <div class="col-xs-8">
+        @Html.RadioButtonFor(x => x.AccountType, 1, new { @style = "float:left; width:20px;" }) Retrieve Data from Microsoft Azure (O365) Active Directory <br />
+        (Single Language Business Card Design)
+    </div>
+
+    <div class="col-xs-8">
+        @Html.RadioButtonFor(x => x.AccountType, 3, new { @style = "float:left; width:20px;" }) Retrieve Data from myCards™ CMS <br />
+        (Dual Language Business Card Design)
+    </div>
+    <div class="col-xs-8" id="captcha-div">
+
+    </div>
+
+    <div class=" col-xs-8">
+        <div class="form">
+            <div class="pull-left mar-top15 check-m-top">
+                <div class="squaredChk pull-left">
+                    <input id="chkAcceptTerms" name="chkAcceptTerms" class="hidden" type="checkbox" value="None"> <label id="chkLabel" class="" for="chkAcceptTerms"></label>
+                </div>
+                <label class="pull-left p-small book mar-left5">@MyCard.Web.Resources.CaptionsAll.RegisterIacceptthe <span style="text-decoration:underline; color:#595959;"><a href="https://www.mycards.com/terms.html" target="_blank">@MyCard.Web.Resources.CaptionsAll.RegisterTermsOfServices</a></span></label>
+            </div>
+            <div class="pull-right"> <button type="button" class="submit" data-toggle="modal" name="register" id="register">@MyCard.Web.Resources.CaptionsAll.RegisterButton</button> </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+}
+
+<div class="clearfix"></div>
+@*<div class="col-xs-12"><p class="mar-top0 book f-p-medium">@MyCard.Web.Resources.CaptionsAll.RegisterIfyouAlready <a href="@Url.Action("Login", "CompanyDashboard")" class="bold color-blue"> @MyCard.Web.Resources.CaptionsAll.RegisterSignin</a> @MyCard.Web.Resources.CaptionsAll.RegisterHere</p></div>*@
+
+<div class="modal fade product_view" id="popup_view" name="popup_view">
+    <div class="modal-dialog">
+        <div style="border:none;" class="modal-content">
+            <div class="col-xs-12 row">
+                <div class="green-bg popup row">
+                    <div class="col-xs-2"><img alt="tick" src="~/img/admin/popup-tick.png" class="img center-block" /></div>
+                    <div class="col-xs-10">
+                        @*<h4 class="color-white bold h4-well24 mar-top15">@MyCard.Web.Resources.CaptionsAll.RegisterSuccessMessageMO1</h4>*@
+                        <p class="color-white book h4-well24 mar-top15">@MyCard.Web.Resources.CaptionsAll.RegisterSuccessMessageMO1</p>
+                        <p class="color-white book h4-well24">
+                            @MyCard.Web.Resources.CaptionsAll.RegisterSuccessMessageMO2 <br>
+                            @*@MyCard.Web.Resources.CaptionsAll.RegisterSuccessMessage3*@
+                        </p>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <a id="btnNext" href="#" class="row submit f-p medium pull-right">Next <i class="fa fa-chevron-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade product_view" id="popup_view2" name="popup_view2">
+    <div class="modal-dialog">
+        <div style="border:none;" class="modal-content">
+            <div class="col-xs-12 row">
+                <div class="green-bg popup row">
+                    <div class="col-xs-2"><img alt="tick" src="~/img/admin/popup-tick.png" class="img center-block" /></div>
+                    <div class="col-xs-10">
+                        <h4 class="color-white bold h4-well24 mar-bot15">@MyCard.Web.Resources.CaptionsAll.NotCorporateUserMessage1</h4>
+                        <p class="color-white book h4-well24">
+                            @MyCard.Web.Resources.CaptionsAll.NotCorporateUserMessage2 <br>
+                        </p>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <a id="btnNext2" href="#" class="row submit f-p medium pull-right">Next <i class="fa fa-chevron-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade product_view" id="popup_view_free" name="popup_view_free">
+    <div class="modal-dialog">
+        <div style="border:none;" class="modal-content">
+            <div class="col-xs-12 row">
+                <div class="green-bg popup row">
+                    <div class="col-xs-2"><img alt="tick" src="~/img/admin/popup-tick.png" class="img center-block" /></div>
+                    <div class="col-xs-10">
+                        @*<h4 class="color-white bold h4-well24 mar-top15">@MyCard.Web.Resources.CaptionsAll.RegisterSuccessMessageMO1</h4>*@
+                        <p class="color-white book h4-well24 mar-top15">@MyCard.Web.Resources.CaptionsAll.RegisterSuccessMessageFree1</p>
+                        <p class="color-white book h4-well24">
+                            @MyCard.Web.Resources.CaptionsAll.RegisterSuccessMessageFree2 <br>
+                            @*@MyCard.Web.Resources.CaptionsAll.RegisterSuccessMessage3*@
+                        </p>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <a id="btnNextFree" href="#" class="row submit f-p medium pull-right">Next <i class="fa fa-chevron-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    function loadcaptcha() {
+
+        $.ajax({
+            url: "@Url.Action("GetCaptcha", "Registration")",
+                processData: false,
+                type: "GET",
+                success: function (html) {
+                    $("#captcha-div").html(html);
+                }
+            });
+    }
+
+
+    function getCities()
+    {
+        var countryname = $('#DropDownListCountry').val();
+        if (countryname != '')
+        {
+            $.ajax({
+                url: "@Url.Action("GetJsonCity","Registration")",
+                data: { countryName: countryname },
+                dataType: "json",
+                type: "GET",
+                success: function (data) {
+                    var items = "";
+                    items = "<option value=''>--Choose City--</option>";
+                    $.each(data, function (i, item) {
+                        items += "<option value=\"" + item.Value + "\">" + item.Text + "</option>";
+                    });
+                    $('#DropDownListCities').html(items);
+                }
+            });
+        }
+    }
+
+    function getIndustries()
+    {
+        //var countryname = $('#DropDownListCountry').val();
+        $.ajax({
+            url: "@Url.Action("GetJsonIndustry", "Registration")",
+                processData: false,
+                dataType: "json",
+                type: "GET",
+                success: function (data) {
+                    var items = "";
+                    items = "<option value=''>--Choose Industry--</option>";
+                    $.each(data, function (i, item) {
+                        items += "<option value=\"" + item.Value + "\">" + item.Text + "</option>";
+                    });
+                    $('#DropDownListIndustries').html(items);
+                }
+            });
+
+    }
+
+    function getCountries()
+    {
+        //var countryname = $('#DropDownListCountry').val();
+        $.ajax({
+            url: "@Url.Action("GetJsonCountry", "Registration")",
+                processData: false,
+                dataType: "json",
+                type: "GET",
+                success: function (data) {
+                    var items = "";
+                    items = "<option value=''>--Choose Country--</option>";
+                    $.each(data, function (i, item) {
+                        items += "<option value=\"" + item.Value + "\">" + item.Text + "</option>";
+                    });
+                    $('#DropDownListCountry').html(items);
+                }
+            });
+
+    }
+
+
+    function backFunction() {
+        $('#crosspopup_view').modal('hide');
+    }
+
+    function backTermsFunction() {
+        $('#termspopup_view').modal('hide');
+    }
+
+
+
+    $(document).ready(function () {
+        getIndustries();
+        getCountries();
+        loadcaptcha();
+        //getCities();
+        //On Page load check if some field is empty
+        if ($('#DropDownListCities').val() == '') {
+            $('#DropDownListCities').css('border-color', 'red');
+            $('#errornotification').show();
+        }
+        else {
+            $('#DropDownListCities').css('border-color', '');
+        }
+        //////
+        if ($('#DropDownListCountry').val() == '') {
+            $('#DropDownListCountry').css('border-color', 'red');
+            $('#errornotification').show();
+        }
+        else {
+            $('#DropDownListCountry').css('border-color', '');
+        }
+        ///////
+        if ($('#DropDownListIndustries').val() == '') {
+            $('#DropDownListIndustries').css('border-color', 'red');
+            $('#errornotification').show();
+        }
+        else {
+            $('#DropDownListIndustries').css('border-color', '');
+        }
+
+        if ($('#CustomerName').val() == '') {
+            $('#CustomerName').css('border-color', 'red');
+            $('#errornotification').show();
+        }
+        else {
+            $('#CustomerName').css('border-color', '');
+            $('#CustomerName').attr('readonly', 'true'); // mark it as read only
+            $('#CustomerName').css('background-color', '#DEDEDE');
+        }
+        ///////////////
+        if ($('#Name').val() == '') {
+            $('#Name').css('border-color', 'red');
+            $('#errornotification').show();
+        }
+        else {
+            $('#Name').css('border-color', '');
+            $('#Name').attr('readonly', 'true'); // mark it as read only
+            $('#Name').css('background-color', '#DEDEDE');
+        }
+        //////////////
+        if ($('#EmailID').val() == '') {
+            $('#EmailID').css('border-color', 'red');
+            $('#errornotification').show();
+        }
+        else {
+            $('#EmailID').css('border-color', '');
+            $('#EmailID').attr('readonly', 'true'); // mark it as read only
+            $('#EmailID').css('background-color', '#DEDEDE');
+        }
+        ///////////////
+@*if ($('#BusinessTitle').val() == '') {
+        $('#BusinessTitle').css('border-color', 'red');
+        $('#errornotification').show();
+    }
+    else {
+        $('#BusinessTitle').css('border-color', '');
+        $('#BusinessTitle').attr('readonly', 'true'); // mark it as read only
+        $('#BusinessTitle').css('background-color', '#DEDEDE');
+    }*@
+        ///////////////
+        if ($('#DomainName').val() == '') {
+            $('#DomainName').css('border-color', 'red');
+            $('#errornotification').show();
+        }
+        else {
+            $('#DomainName').css('border-color', '');
+            $('#DomainName').attr('readonly', 'true'); // mark it as read only
+            $('#DomainName').css('background-color', '#DEDEDE');
+        }
+        ///////////////
+
+
+        $('#btnNextFree').click(function () {
+            document.location = '@Url.Action("Index", "Home")';
+            });
+
+
+        $('#btnNext').click(function () {
+@*document.location = '@Url.Action("Login", "CompanyDashboard", new { emailAddress = " + $('#EmailID').val() + " })';*@
+@*document.location = '@Url.Action("Login", "CompanyDashboard")?emailAddress=' + $('#EmailID').val();*@
+            document.location = '@Url.Action("Index", "Home")';
+            });
+
+            $('#btnNext2').click(function () {
+            //document.location = '@System.Configuration.ConfigurationManager.AppSettings["myCardWeb"]';
+            document.location = '@System.Configuration.ConfigurationManager.AppSettings["myCardWeb"]';
+            $('#popup_view2').modal('hide');
+            });
+
+        $('#register').click(function () {
+
+            if ($('#DropDownListCities').val() == '') {
+                $('#DropDownListCities').css('border-color', 'red');
+                $('#errornotification').show();
+            }
+            else {
+                $('#DropDownListCities').css('border-color', '');
+            }
+            //////
+            if ($('#DropDownListCountry').val() == '') {
+                $('#DropDownListCountry').css('border-color', 'red');
+                $('#errornotification').show();
+            }
+            else {
+                $('#DropDownListCountry').css('border-color', '');
+            }
+            ///////
+            if ($('#DropDownListIndustries').val() == '') {
+                $('#DropDownListIndustries').css('border-color', 'red');
+                $('#errornotification').show();
+            }
+            else {
+                $('#DropDownListIndustries').css('border-color', '');
+            }
+            //
+            if ($('#CustomerName').val() == '') {
+            $('#CustomerName').css('border-color', 'red');
+            $('#errornotification').show();
+            }
+            else {
+            $('#CustomerName').css('border-color', '');
+            }
+            ///////////////
+            if ($('#Name').val() == '') {
+            $('#Name').css('border-color', 'red');
+            $('#errornotification').show();
+            }
+            else {
+            $('#Name').css('border-color', '');
+            }
+            //////////////
+            if ($('#EmailID').val() == '') {
+            $('#EmailID').css('border-color', 'red');
+            $('#errornotification').show();
+            }
+            else {
+            $('#EmailID').css('border-color', '');
+            }
+            ///////////////
+            //if ($('#BusinessTitle').val() == '') {
+            //    $('#BusinessTitle').css('border-color', 'red');
+            //    $('#errornotification').show();
+            //}
+            //else {
+            //    $('#BusinessTitle').css('border-color', '');
+            //}
+            ///////////////
+            if ($('#DomainName').val() == '') {
+            $('#DomainName').css('border-color', 'red');
+            $('#errornotification').show();
+            }
+            else {
+            $('#DomainName').css('border-color', '');
+            }
+            ///////////////
+            if ($('#CustomerName').val() == '' || $('#EmailID').val() == '' || $('#DomainName').val() == '' || $('#Name').val() == '' || $('#DropDownListCities').val() == '' || $('#DropDownListCountry').val() == '' || $('#DropDownListIndustries').val() == '') {
+            $('#errornotification').show();
+            return false;
+            }
+            else {
+            $('#errornotification').hide();
+            }
+            ///////////////
+            if (!$('#chkAcceptTerms').is(':checked')) {
+            $('#termsError').show();
+            return false;
+            }
+            else {
+            $('#termsError').hide();
+            }
+            ///////////////
+            if (!validateEmail($('#EmailID').val())) {
+            $('#EmailID').css('border-color', 'red');
+            $('#pemailerror').show();
+            return false;
+            }
+            else {
+            $('#EmailID').css('border-color', '');
+            $('#pemailerror').hide();
+            }
+
+            /////////
+            ///////////////
+            //if (!validateDomain($('#DomainName').val())) {
+            //$('#DomainName').css('border-color', 'red');
+            //$('#pdomainerror').show();
+            //return false;
+            //}
+            //else {
+            //$('#DomainName').css('border-color', '');
+            //$('#pdomainerror').hide();
+            //}
+
+            /////////
+            $('#regform').submit();
+            });
+
+            /////////
+            function validateEmail(sEmail) {
+            var filter = /^[a-zA-Z0-9_.-]+@@[a-zA-Z0-9]+[a-zA-Z0-9.-]+[a-zA-Z0-9]+.[a-z]{0,4}$/;
+            if (filter.test(sEmail)) {
+            return true;
+            }
+            else {
+            return false;
+            }
+            }
+            ///////////////
+
+            function validateDomain(sDomain) {
+            //filter = ^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\.)+[A-Za-z]{2,6}$;
+            var filter = /((www\.|(http|https|ftp|news|file|)+\:\/\/)?[&#95;.a-z0-9-]+\.[a-z0-9\/&#95;:@@=.+?,##%&~-]*[^.|\'|\# |!|\(|?|,| |>|<|;|\)])/;
+            if (filter.test(sDomain)) {
+            return true;
+            }
+            else {
+            return false;
+            }
+            }
+
+            ////////////
+
+            $("#chkAcceptTerms").change(function () {
+            if (this.checked) {
+            $('#termsError').hide();
+            }
+            else {
+            $('#termsError').show();
+            }
+            });
+
+            // Handle the form submit event, and make the Ajax request:
+            $("#regform").on("submit", function (event) {
+            event.preventDefault();
+            var url = $(this).attr("action");
+            var formData = $(this).serialize();
+            $.ajax({
+            url: url,
+            type: "POST",
+            data: formData,
+            dataType: "json",
+            success: function (resp) {
+
+                if (resp.success) {
+                    if (resp.responseText == '@MyCard.Web.Resources.CaptionsAll.RegisterSuccessMessageFree1') {
+                        $('#popup_view_free').modal({ backdrop: 'static', keyboard: false })
+                    }
+                    else {
+                        $('#popup_view').modal({ backdrop: 'static', keyboard: false })
+                    }
+
+            }
+                else {
+                    loadcaptcha();
+            //$('#crosspopup_view').modal({ backdrop: 'static', keyboard: false });
+            if (resp.responseText == '@MyCard.Web.Resources.ErrorMessages.DomainAlreadyRegistered')
+            {
+            $('#popup_view2').modal({ backdrop: 'static', keyboard: false })
+            }
+            else
+            {
+            $("#perror").text(resp.responseText);
+            }
+
+
+            }
+            },
+            error: function (response) {
+            //$('#crosspopup_view').modal({ backdrop: 'static', keyboard: false });
+            $("#perror").text(response.responseText);
+            }
+            })
+
+            });
+            });
+</script>
+
+

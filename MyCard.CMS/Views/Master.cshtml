@@ -1,0 +1,128 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+	Layout = null;
+}
+
+@* the fun starts here *@
+
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+<head>
+<!-- BASICS -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>My Cards</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+<link rel="stylesheet" type="text/css" href="css/isotope.css" media="screen" />
+<link rel="stylesheet" href="Scripts/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="css/bootstrap-theme.css">
+<link rel="stylesheet" href="css/style.css">
+<!-- skin -->
+<link rel="stylesheet" href="skin/default.css">
+</head>
+
+<body>
+<section id="header" class="appear"></section>
+<div class="navbar navbar-fixed-top" role="navigation" data-0="line-height:100px; height:80px; background-color:rgba(250,250,250,0.3);" data-300="line-height:80px; height:80px; background-color:rgba(250,250,250,1);">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="fa fa-bars color-blue"></span> </button>
+      <h1><a class="navbar-brand" href="index.html" data-0="line-height:90px;" data-300="line-height:50px;"><img src="img/logo.png" class="img-responsive" alt="logo"/> </a></h1>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav" data-0="margin-top:20px;" data-300="margin-top:20px;">
+        <li class="active"><a href="#">Our Product</a></li>
+        <li><a href="#">Go Green</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a class="signin pull-right">Sign In</a></li>
+      </ul>
+    </div>
+    <!--/.navbar-collapse --> 
+  </div>
+</div>
+<div>
+@RenderBody()
+<footer>
+  <div class="container">
+    <div class="mar-top40 mar-bot40">
+      <h2>@Umbraco.Field("contactUsMainHeading")</h2>
+    </div>
+    <br>
+    <div class="col-md-3 col-sm-6 pad-bot30">
+      <h4>@Umbraco.Field("contactUsHeading1")</h4>
+      @Umbraco.Field("contactUsContent1")
+    </div>
+    <div class="col-md-3 col-sm-6 pad-bot30">
+      <h4>@Umbraco.Field("contactUsHeading2")</h4>
+      @Umbraco.Field("contactUsContent2")
+    </div>
+    <div class="col-md-3 col-sm-6 pad-bot30">
+      <h4>@Umbraco.Field("contactUsHeading3")</h4>
+      @Umbraco.Field("contactUsContent3")
+    </div>
+    <div class="col-md-3 col-sm-6 pad-bot30">
+      <h4>@Umbraco.Field("contactUsHeading4")</h4>
+      <div class="bg-white">
+        @Umbraco.Field("contactUsContent4")
+        
+      </div>
+    </div>
+  </div>
+  <div class="bg-white pad-top30 pad-bot30">
+    <div class="container">
+      <div class="col-md-offset-2 col-md-10 pad-top40">
+        <div class="col-md-2 col-sm-6">
+          <h5>@Umbraco.Field("footerList1Heading")</h5>
+          @Umbraco.Field("footerList1")
+        </div>
+        <div class="col-md-2 col-sm-6">
+          <h5>@Umbraco.Field("footerList2Heading")</h5>
+          @Umbraco.Field("footerList2")
+        </div>
+        <div class="col-md-2 col-sm-6">
+          <h5>@Umbraco.Field("footerList3Heading")</h5>
+          @Umbraco.Field("footerList3")
+        </div>
+        <div class="col-md-2 col-sm-6">
+          <h5>@Umbraco.Field("footerList4Heading")</h5>
+          @Umbraco.Field("footerList4")
+        </div>
+        <div class="col-md-2 col-sm-6">
+          <h5>@Umbraco.Field("footerList5Heading")</h5>
+          @Umbraco.Field("footerList5")
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <br>
+      <hr>
+    </div>
+    <div class="text-center">&copy; myCards<sup>™</sup> All Rights Reserved. 2017</div>
+  </div>
+</footer>
+<a href="" class="scrollup"><i ><img class="img-responsive" src="img/sidebar.png"/></i></a> 
+<script src="Scripts/modernizr-2.6.2-respond-1.1.0.min.js"></script> 
+<script src="Scripts/jquery.js"></script> 
+<script src="Scripts/jquery.easing.1.3.js"></script> 
+<script src="v/bootstrap.min.js"></script> 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASm3CwaK9qtcZEWYa-iQwHaGi3gcosAJc&sensor=false"></script> 
+<script src="Scripts/jquery.isotope.min.js"></script> 
+<script src="Scripts/jquery.nicescroll.min.js"></script> 
+<script src="Scripts/fancybox/jquery.fancybox.pack.js"></script> 
+<script src="Scripts/skrollr.min.js"></script> 
+<script src="Scripts/jquery.scrollTo-1.4.3.1-min.js"></script> 
+<script src="Scripts/jquery.localscroll-1.2.7-min.js"></script> 
+<script src="Scripts/stellar.js"></script> 
+<script src="Scripts/jquery.appear.js"></script> 
+<script src="Scripts/validate.js"></script> 
+<script src="Scripts/main.js"></script>
+</body>
+</html>

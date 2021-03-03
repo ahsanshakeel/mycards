@@ -1,0 +1,202 @@
+﻿@model MyCard.Web.Models.CompanyListingViewModel
+@{
+    ViewBag.Title = @MyCard.Web.Resources.CaptionsAll.CompanyListingTitle;
+    Layout = "~/Areas/Admin/Views/Shared/_MasterLayoutSuperAdmin.cshtml";
+}
+
+
+@using (Ajax.BeginForm("CompaniesListing", "Default", new AjaxOptions { HttpMethod = "Post", InsertionMode = InsertionMode.Replace, UpdateTargetId = "CompaniesDiv" }))
+{
+    
+    <div class="col-md-12">
+        <div class="pull-right">
+            <a href="#" onclick="exportfunc();"><h5>Export</h5></a>
+        </div>
+        <h3 class="mar-bot15 color-blue book h3-well">Companies Listing</h3>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="">
+                    @Html.TextBoxFor(m => m.SearchString, Model.SearchString, new { @placeholder = "Search Companies" })
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="">
+                    @Html.TextBox("DateFrom", "", new { @placeholder = "From Date" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="">
+                    @Html.TextBox("DateTo", "", new { @placeholder = "To Date" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="">
+                    <input type="button" id="SearchButton" Name="SearchButton" value="Search" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="CompaniesDiv">
+        @Html.Partial("_PartialCompanies", Model)
+            
+    </div>
+
+}
+
+<div style="top:25%;" class="modal fade popup_view" id="confirmpopup_view" name="confirmpopup_view">
+    <div class="modal-dialog">
+        <div style="border:none;" class="modal-content">
+            <div class="col-xs-12">
+                <div class="green-bg popup">
+                    @*<div class="col-xs-3"></div>*@
+                    @*<div class="col-xs-9">*@
+                    @*<5 class="color-white bold h4-well24 mar-left5 mar-bot15"> @MyCard.Web.Resources.CaptionsAll.POStatusChangeMessage</5>*@
+                    <h5 class="color-white bold h4-well24 mar-left5 mar-bot15"> Change the status of request for freemium license?</h5>
+
+                    @*</div>*@
+                    @*<div class="clear"></div>*@
+                </div>
+                <button type="button" class=" submit small pull-right" id="btnYesConfirmYesNo">OK <i class=" fa fa-next"></i></button>
+                <button type="button" class=" submit small pull-right mar-right10" id="btnNoConfirmYesNo">Back <i class=" fa fa-next"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="top:25%;" class="modal fade popup_view" id="confirmpopup_view_reject" name="confirmpopup_view_reject">
+    <div class="modal-dialog">
+        <div style="border:none;" class="modal-content">
+            <div class="col-xs-12">
+                <div class="green-bg popup">
+                    @*<div class="col-xs-1"></div>*@
+                    <div class="col-xs-12">
+                        @*<textarea id="rejectionreason" cols="50" rows="3" class="form-control"></textarea>*@
+                        @*<input type="textarea" id="rejectionreason"/>*@
+                        <br />
+                        @*<h5 class="color-white five"> @MyCard.Web.Resources.CaptionsAll.ReasonForRejection</h5>*@
+                        <h5 class="color-white bold h4-well24 mar-left5 mar-bot15"> Change the status of request for freemium license? </h5>
+
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <button type="button" class=" submit small pull-right" id="btnYesConfirmYesNoReject">OK <i class=" fa fa-next"></i></button>
+                <button type="button" class=" submit small pull-right mar-right10" id="btnNoConfirmYesNoReject">Back <i class=" fa fa-next"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //$(".pager").click(function (evt) {
+    //    var pageindex = $(evt.target).data("pageindex");
+    //    $("#CurrentPageIndex").val(pageindex);
+    //    evt.preventDefault();
+    //    $("form").submit();
+    //});
+
+    function pagerclick(pindex)
+    {
+        var pageindex = pindex;
+        $("#CurrentPageIndex").val(pageindex);
+        //evt.preventDefault();
+        $("form").submit();
+   
+    }
+
+    function exportfunc() {
+        var url = "/Admin/Default/CompanyListingExport?"
+            + "&SearchString=" + $("#SearchString").val()
+            + "&DateTo=" + $("#DateTo").val()
+            + "&DateFrom=" + $("#DateFrom").val();
+
+        window.location.href = url;
+
+    }
+
+    function PageSizeChange() {
+        $("#CurrentPageIndex").val(0);
+        $("form").submit();
+    }
+
+    //$("#SearchString").keyup(function (event) {
+    //    if (event.keyCode == 13) {
+    //        $("#CurrentPageIndex").val(0);
+    //        $("form").submit();
+    //    }
+    //});
+
+
+    $("#SearchString").keyup(function (event) {
+        //if ($(this).val().length > 2) {
+            $("#CurrentPageIndex").val(0);
+            $("form").submit();
+            //$(this).focus();
+        //}
+    });
+
+    $("#SearchButton").click(function (event) {
+        $("#CurrentPageIndex").val(0);
+        $("form").submit();
+    });
+
+    $(function () {
+        // This will make every element with the class "date-picker" into a DatePicker element
+        $('.date-picker').datepicker();
+        $("#DateFrom").datepicker({ dateFormat: 'd-M-yy' }).val();
+        $("#DateTo").datepicker({ dateFormat: 'd-M-yy' }).val();
+    })
+
+    function AsyncConfirmYesNo(elem) {
+        var $confirm;
+        if (elem.options[elem.selectedIndex].text == "Rejected") {
+            $confirm = $("#confirmpopup_view_reject");
+        }
+        else {
+            $confirm = $("#confirmpopup_view");
+        }
+
+        $confirm.modal('show');
+        $("#btnYesConfirmYesNo").off('click').click(function () {
+            UpdateCompany(elem);
+            $confirm.modal("hide");
+            Paging();
+        });
+        $("#btnYesConfirmYesNoReject").off('click').click(function () {
+            UpdateCompany(elem);
+            $confirm.modal("hide");
+            Paging();
+        });
+        $("#btnNoConfirmYesNo").off('click').click(function () {
+            $confirm.modal("hide");
+            Paging();
+        });
+        $("#btnNoConfirmYesNoReject").off('click').click(function () {
+            $confirm.modal("hide");
+            Paging();
+        });
+    }
+
+
+    function UpdateCompany(elem) {
+        var answer = elem.options[elem.selectedIndex].value;
+        var isDone = answer;
+        var reject = $('#rejectionreason').val();
+        var companyid = $(elem).data('itemid');
+
+        $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateCompanyStatus", "Default")',
+            data: { approved: isDone, companyId: companyid, rejectReason: reject },
+            success: function(res) {
+                console.log(res);
+            }
+        });
+    }
+
+    function Paging() {
+        $("form").submit();
+    }
+</script>

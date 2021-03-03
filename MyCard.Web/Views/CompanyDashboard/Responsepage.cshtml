@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "Responsepage";
+    Layout = "~/Views/Shared/_MasterLayoutAdmin.cshtml";
+}
+<center>
+  
+    <div style="padding-top:100px!important">
+     
+        <h1><b>  Payment Process Successfully done..!</b></h1>
+    </div>
+</center>
+
+
+<script>
+    setTimeout(function () {
+        Returnbackpage();
+    }, 4000);
+
+
+        function Returnbackpage()
+        {
+            window.location = "https://localhost:44305/CompanyDashboard/Purchase";
+        }
+    
+</script>
+

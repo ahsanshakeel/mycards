@@ -1,0 +1,132 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.HomePage>
+@using ContentModels = Umbraco.Web.PublishedContentModels;
+@{
+	Layout = "Master.cshtml";
+}
+
+<div> </div>
+<section class="featured">
+  <div class="container">
+    <div class="row mar-bot40">
+      <div class="col-md-6 col-md-offset-0">
+        <div class="align-left"> <i class="mar-bot20"></i> <a href="#"><img class="img-responsive" src="img/logo.png"/></a><br>
+          <h1>@Umbraco.Field("uspMainHeadline")<br>
+            @Umbraco.Field("uspSupportingHeadline")</h1>
+          <br>
+          <button class="l-more">@Umbraco.GetDictionaryValue("Learn More")</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--Video Section 1-->
+<div>
+  <div class="col-md-12">
+    <video width="100%" height="auto" poster="img/video1.jpg" controls>
+      <source src="MOV005.mp4" type="video/mp4">
+      <source src="MOV005.ogg" type="video/ogg">
+    </video>
+  </div>
+</div>
+
+<!-- Why myCards™ section:testimonial -->
+<section id="testimonials" class="section" data-stellar-background-ratio="0.5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="align-left">
+          <div class="testimonial pad-top40 pad-bot40 clearfix">
+            <h4><strong>@Umbraco.Field("whyMyCardHeading")</strong></h4>
+            <h2>@Umbraco.Field("whyMyCardSubHeading")</h2>
+            <p>@Umbraco.Field("whyMayCardPara1")<br>
+              <br>
+              @Umbraco.Field("whyMyCardPara2") </p>
+            <br>
+            <button class="l-more">@Umbraco.GetDictionaryValue("Learn More")</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!--Video Section 2-->
+<div>
+  <div class="col-md-12">
+    <video width="100%" height="auto" poster="img/video2bg.jpg" controls>
+      <source src="MOV005.mp4" type="video/mp4">
+      <source src="MOV005.ogg" type="video/ogg">
+    </video>
+  </div>
+</div>
+<div class="clearfix"></div>
+<!-- What’s cool about myCards -->
+<section id="section-about" class="section appear clearfix">
+  <div class="container">
+    <div class="row text-center">
+      <h4><strong class="mar-top30">@Umbraco.Field("whatsCoolMainHeading")</strong></h4>
+      <h2>@Umbraco.Field("whatsCoolSlogan")</h2>
+      <br>
+      <br>
+    </div>
+    <div class="row align-center mar-bot40">
+      <div class="col-md-3">
+        <div class="team-member">
+          <figure class="member-photo"><img src="img/icon1.png" alt="" /></figure>
+          <div class="team-detail">
+            <h4>@Umbraco.Field("whatsCoolHeading1")</h4>
+            <p>@Umbraco.Field("whatsCoolContent1")</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="team-member">
+          <figure class="member-photo"><img src="img/icon2.png" alt="" /></figure>
+          <div class="team-detail">
+            <h4>@Umbraco.Field("whatsCoolHeading2")</h4>
+            <p>@Umbraco.Field("whatsCoolContent2")</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="team-member">
+          <figure class="member-photo"><img src="img/icon3.png" alt="" /></figure>
+          <div class="team-detail">
+            <h4>@Umbraco.Field("whatsCoolHeading3")</h4>
+            <p>@Umbraco.Field("whatsCoolContent3")</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="team-member">
+          <figure class="member-photo"><img src="img/icon4.png" alt="" /></figure>
+          <div class="team-detail">
+            <h4>@Umbraco.Field("whatsCoolHeading4")</h4>
+            <p>@Umbraco.Field("whatsCoolContent4")</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- /What’s cool section end --> 
+
+<!-- GOING GREEN section:stats -->
+<section id="parallax1" class="section pad-top40 pad-bot40" data-stellar-background-ratio="0.5">
+  <div class="container">
+    <div class="align-center pad-top40 pad-bot40 col-md-offset-2 col-md-8"> <img class="img-responsive center-block" src="img/processbg.png"/>
+      <h4><strong style="color:#FFFFFF;">@Umbraco.Field("goGreenMainHeading")</strong></h4>
+      <h2 style="color:#FFFFFF;">@Umbraco.Field("goGreenSlogan")</h2>
+      <p class="color-white">@Umbraco.Field("goGreenPara1")<br>
+        <br>
+        @Umbraco.Field("goGreenPara2")<br>
+        <br>
+        <strong>@Umbraco.Field("goGreenCSR") &nbsp; &nbsp; &nbsp;   •   @Umbraco.Field("goGreenEvolution") &nbsp; &nbsp; &nbsp;    •   @Umbraco.Field("goGreenYourCSR") </strong> <br>
+        <br>
+        <button class="l-more">@Umbraco.GetDictionaryValue("Learn More")</button>
+      </p>
+    </div>
+  </div>
+</section>

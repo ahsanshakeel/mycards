@@ -1,0 +1,179 @@
+﻿@model MyCard.Web.Models.LoginViewModel
+@{
+    ViewBag.Title = @MyCard.Web.Resources.CaptionsAll.LoginTitle;
+    Layout = "~/Views/Shared/_MasterLayoutAdmin.cshtml";
+}
+@*<div class=" col-xs-12">
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+            <a href="@Url.Action("MSOLogin", "Home")" title="Sign in" >
+                Sign in with Microsoft Office 365
+            </a>
+        </li>
+    </ul>
+</div>*@
+
+@*<div class=" col-xs-7">
+    @if (!string.IsNullOrEmpty(@ViewBag.ActivationLinkMessage))
+    {
+        <p class="mar-bot20 book f-p">@MyCard.Web.Resources.CaptionsAll.AcivationLinkMessage1 <a href="@Url.Action("ResendLink", "CompanyDashboard")" class="txt-bold color-blue">@MyCard.Web.Resources.CaptionsAll.ActivationLinkMessageHere</a> @MyCard.Web.Resources.CaptionsAll.AcivationLinkMessage2</p><br>
+    }
+    
+   
+    
+</div>*@
+
+ @*@using (Html.BeginForm("Login", "CompanyDashboard", new {id="loginform", ReturnUrl = ViewBag.ReturnUrl }))
+            {
+                        
+                        @Html.HiddenFor(model => model.RememberMe)
+                        <div class=" col-xs-12">
+                            <div class=" col-xs-5">
+                                <div class="row">
+                               
+                                <p id="errornotification" class="red-color p-small medium" hidden><i class=" fa fa-times-circle"></i> Please complete the highlighted mandatory fields</p>
+                                @if (!string.IsNullOrEmpty(ViewBag.Message))
+                                {
+                                    <p id="errornotification" class="red-color p-small medium"><i class=" fa fa-times-circle"></i> @ViewBag.Message</p>
+                                }
+                            </div>
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <div class=" col-xs-5">
+                                <div class="row">
+                                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { placeholder = "user name  or email" }})
+
+                                </div>
+                            </div>
+                            
+                            <div class="clearfix"></div>
+
+                            <div class=" col-xs-5">
+                                <div class="row">
+                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { placeholder = "password" } })
+                                    
+                                </div>
+                            </div>
+                           
+                            <div class="clearfix"></div>
+
+                            <div class=" col-xs-5">
+                                <div class="form row">
+                                    <div class="pull-left mar-top15 check-m-top">
+                                        <div class="squaredChk pull-left">
+                                            <input id="chkRemMe" name="chkRemMe" class="hidden" type="checkbox" value="None">
+                                            <label id="chkLabel" class="" for="chkRemMe"></label>
+                                        </div>
+                                        <label class="pull-left p-small book mar-left5">@MyCard.Web.Resources.CaptionsAll.RememberMe</label>
+                                    </div>
+                                    <div class="pull-right"> <button type="button" class="submit" name="login" id="login">@MyCard.Web.Resources.CaptionsAll.LoginButton</button> </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+
+
+                            <div class="clearfix"></div>
+                            <a href="@Url.Action("ForgotPassword", "CompanyDashboard")" class="txt-bold color-blue">@MyCard.Web.Resources.CaptionsAll.ForgotPasswordLinkOnLogin</a>
+                            
+                        </div>
+                        
+                        <div class="col-xs-12"><p class="mar-top10 book f-p-medium">@MyCard.Web.Resources.CaptionsAll.LoginNewtoMyCards <a href="@Url.Action("Index", "Registration")" class="bold color-blue"> @MyCard.Web.Resources.CaptionsAll.LoginRegister</a> @MyCard.Web.Resources.CaptionsAll.LoginHere</p></div>
+            }*@
+
+
+<div class="clearfix"></div>
+<div class="col-xs-12">
+    @*<div class="col-xs-12 row">
+            <p class="mar-top10 book f-h">@MyCard.Web.Resources.CaptionsAll.LoginSignInMessage </p>
+        </div>*@
+    @*<div class="col-xs-12 row">
+        <div class="col-sm-4 row mar-top10 book f-h">
+            @MyCard.Web.Resources.CaptionsAll.LoginSignInMessage
+        </div>
+        <div class="col-sm-4 row mar-top10 book f-h">
+            
+        </div>
+        <div class="col-sm-4 mar-top10 book f-h">
+            &nbsp;On-Premise Login
+        </div>
+    </div>*@
+
+    <div class="col-sm-4 row">
+        <a href="@Url.Action("MSOLogin", "Home")"><img class="img-responsive" alt="Office 365" src="~/img/Ofc365_MSNews.png"></a>
+    </div>
+
+    <div class="col-sm-4 row">
+        
+    </div>
+
+    <div class="col-sm-4 row">
+        <a href="@Url.Action("LoginPremise", "CompanyDashboard")"><img class="img-responsive" alt="Office 365" src="~/img/cms-button.png"></a>
+    </div>
+
+</div>
+
+<div class="clearfix"></div>
+
+<br />
+<br />
+<div class="col-xs-12"><p class="mar-top10 book f-h">@MyCard.Web.Resources.CaptionsAll.LoginNewtoMyCards <a href="@Url.Action("Index", "Registration")" class="bold color-blue"> @MyCard.Web.Resources.CaptionsAll.LoginRegister</a> @MyCard.Web.Resources.CaptionsAll.LoginHere</p></div>
+
+               
+ <script type="text/javascript">
+     $(document).ready(function () {
+         if ($("#chkRemMe").checked) {
+             $('#RememberMe').val(true);
+         }
+         else {
+             $('#RememberMe').val(false);
+         }
+
+         $("#chkRemMe").change(function () {
+             if (this.checked) {
+                 $('#RememberMe').val(true);
+             }
+             else {
+                 $('#RememberMe').val(false);
+             }
+         });
+
+         $("#Password").keyup(function (event) {
+             if (event.keyCode == 13) {
+                 $('#login').click();
+             }
+         });
+
+        // Attach click handler to the submit button:
+        $('#login').click(function () {
+            if ($('#UserName').val() == '') {
+                $('#UserName').css('border-color', 'red');
+                $('#errornotification').show();
+            }
+            else {
+                $('#UserName').css('border-color', '');
+            }
+            ///////////////
+            if ($('#Password').val() == '') {
+                $('#Password').css('border-color', 'red');
+                $('#errornotification').show();
+            }
+            else {
+                $('#Password').css('border-color', '');
+            }
+            
+            ///////////////
+            
+            if ($('#UserName').val() == '' || $('#Password').val() == '') {
+                $('#errornotification').show();
+                return false;
+            }
+            else {
+                $('#errornotification').hide();
+            }
+            ///////////////
+            $("form").submit();
+        });
+      
+    });
+</script> 

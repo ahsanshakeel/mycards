@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewBag.Title = @MyCard.Web.Resources.CaptionsAll.RegistrationTitle;
+    Layout = "~/Views/Shared/_MasterLayoutAdmin.cshtml";
+}
+
+@*<div class="clearfix"></div>*@
+@*<div class=" col-sm-5 col-sm-offset-1 mar-top20">
+        <a class=" text-center center-block l-more mar-top25" href="@Url.Action("RedirectToMSL", "Registration")">Sign-up with email</a>
+    </div>
+
+    <div class=" col-sm-5 mar-top20">
+        <a class=" text-center center-block l-more office-bg color-white mar-top25" href="@Url.Action("MSOLogin", "Home")">Sign-up with Office 365</a>
+    </div>*@
+<div class="clearfix"></div>
+<div class="col-xs-12">
+    @*<div class="reg col-xs-4 row">
+            <bdo style=" width: 100%;">
+                <input style="float:left; width:20px;" type="radio" value="office" onfocus="javascript:Signup()" name="rbRegister" id="rbRegister" checked>
+                <span></span>
+                <abbr> Signup with Office 365 </abbr>
+            </bdo>
+        </div>*@
+    <div class="col-xs-12 row">
+        @*<p class="mar-top10 book f-p-medium">@MyCard.Web.Resources.CaptionsAll.RegisterSingupMessage </p>*@
+        <!--JR commenting Below for New Changes-->
+        @*<p class="mar-top10 book f-h">@MyCard.Web.Resources.CaptionsAll.RegisterSingupMessage  </p>*@
+    </div>
+    @*<br />
+        <div class="col-sm-3 row">
+            <a href="@Url.Action("MSOLogin", "Home")"><img class="img-responsive" alt="Office 365" src="~/img/Ofc365_MSNews.png"> </a>
+        </div>*@
+
+    <div class="col-sm-4 row">
+        <a href="@Url.Action("MSOLogin", "Home")"><img class="img-responsive" alt="Office 365" src="~/img/Ofc365_MSNews.png"></a>
+    </div>
+
+    <div class="col-sm-4 row">
+
+    </div>
+
+    <div class="col-sm-4 row">
+        <a href="@Url.Action("CMSRegister", "Home")"><img class="img-responsive" alt="Office 365" src="~/img/cms-button.png"></a>
+    </div>
+
+
+</div>
+<div class="clearfix"></div>
+<br />
+<br />
+<div class="col-xs-12">
+    @*<div class="reg">
+            <bdo>
+                <input style="float:left; width:20px;" type="radio" value="notOffice" name="rbRegister" id="rbRegister">
+                <span></span>
+                <abbr>Not an Office 365 user <a onclick="javascript:notSignup()" href="#">click here</a> </abbr>
+            </bdo>
+        </div>*@
+
+    <!--
+    <div class="col-xs-4 row">
+        <p class="mar-top10 book f-h">@MyCard.Web.Resources.CaptionsAll.RegisterNotOfficeUser @*<a onclick="javascript:notSignup()" class="bold color-blue" href="#">@MyCard.Web.Resources.CaptionsAll.RegisterNotOfficeUserClick</a> @MyCard.Web.Resources.CaptionsAll.RegisterNotOfficeUserHere*@</p>
+    </div>
+        -->
+</div>
+<div class="clearfix"></div>
+
+<!--JR commenting Below for New Changes-->
+@*<div id="inquiry">
+    @Html.Partial("_PartialInquiry")
+</div>*@
+
+<div class="clearfix"></div>
+<script>
+        //var lid = $('#rbRegister:checked').val();
+
+        //if (lid == "notOffice") {
+        //    $('#inquiry').show();
+        //}
+        //else {
+        //    $('#inquiry').hide();
+        //}
+
+        //function notSignup() {
+        //    $('#inquiry').show();
+        //}
+
+        //function Signup() {
+        //    $('#inquiry').hide();
+        //}
+
+        //$(document).ready(function () {
+
+        //});
+</script>
+
+
+

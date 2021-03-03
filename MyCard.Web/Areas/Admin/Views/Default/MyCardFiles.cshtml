@@ -1,0 +1,116 @@
+﻿@model MyCard.Web.Models.MyCardFileViewModel
+@{
+                /**/
+
+                /**/
+
+                ViewBag.Title = "MyCards Files";
+                Layout = "~/Areas/Admin/Views/Shared/_MasterLayoutSuperAdmin.cshtml";
+}
+
+
+
+@using (Html.BeginForm("MyCardFiles", "Default", FormMethod.Post, new { encType = "multipart/form-data" }))
+{
+    <div class="col-md-12">
+        <h3 class="mar-bot15 color-blue book h3-well">Proposal File</h3>
+        <br />
+
+        @Model.FileName
+
+    </div>
+
+
+
+    <br />
+
+    <div class="col-md-12">
+
+        <h5> @Html.ActionLink("Download File", "DownloadMyCardFile")</h5>
+        <br />
+
+    </div>
+    <br />
+    <br />
+    <br />
+
+    <div class="clearfix"></div>
+
+    <div class="col-md-4 ">
+        <h5>Upload new proposal file</h5>
+        <input type="file" id="file" name="file" />
+        <div class="">
+            <input type="button" id="UpdateButton" Name="UpdateButton" value="Upload" onclick="AsyncConfirmYesNo();" />
+        </div>
+    </div>
+
+
+}
+
+
+<div style="top:25%;" class="modal fade popup_view" id="confirmpopup_view" name="confirmpopup_view">
+    <div class="modal-dialog">
+        <div style="border:none;" class="modal-content">
+            <div class="col-xs-12">
+                <div class="green-bg popup">
+                    @*<div class="col-xs-3"></div>
+        <div class="col-xs-9">*@
+                    @*<h4 class="color-white five">@MyCard.Web.Resources.CaptionsAll.ChangePriceConfirmation</h4>*@
+                    <h4 class="color-white five">Do you want to change the proposal file?</h4>
+                    <h4 class="color-white three">
+                        @*@MyCard.Web.Resources.CaptionsAll.DeActivateEmployeeMessage2*@
+                    </h4>
+                    @*</div>*@
+                    <div class="clear"></div>
+                </div>
+                <button type="button" class=" submit small pull-right" id="btnYesConfirmYesNo">Yes <i class=" fa fa-next"></i></button>
+                <button type="button" class=" submit small pull-right mar-right10" id="btnNoConfirmYesNo">No <i class=" fa fa-next"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        //if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        //    return false;
+        //}
+        if (charCode == 46 || (charCode >= 48 && charCode <= 57)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+
+    function AsyncConfirmYesNo(elem) {
+        var $confirm;
+        $confirm = $("#confirmpopup_view");
+
+        $confirm.modal('show');
+        $("#btnYesConfirmYesNo").off('click').click(function () {
+            $("form").submit();
+            @*var formData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("MyCardFiles", "Default")',
+                data: formData,
+                dataType: "json",
+            success: function(res) {
+                console.log(res);
+            }
+        });*@
+
+            $confirm.modal("hide");
+        });
+        $("#btnNoConfirmYesNo").off('click').click(function () {
+            $confirm.modal("hide");
+        });
+
+    }
+
+</script>

@@ -1,0 +1,241 @@
+﻿@{
+    ViewBag.Title = "CardShared";
+    Layout = "~/Areas/Admin/Views/Shared/_MasterLayoutSuperAdmin.cshtml";
+}
+
+
+<div class=" col-xs-12">
+    <h3 class="mar-bot0 color-blue book h3-well">Card Shares</h3>
+    
+    <div id="divRegForm" class="signin-form ">
+        <div class="col-xs-6 mar-bot10 row mar-top10 ">
+            <div class="pull-left dark-color col-sm-12 row">
+                <select id="ddlCompanies" class="s-input"></select>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        
+        <div class="col-sm-8 shadow mini-box mar-bot20 ">
+            <div class="col-xs-4 row">
+                <div class="pull-left">
+                    <p class="mar-bot3 medium f-p">Cards shares</p>
+                    <p class="p-small color-gray mar-bot0 italic">as of @DateTime.Now.ToString("dd MMMM yyyy")</p>
+                </div>
+            </div>
+            <div class="col-xs-6 row"><h4 id="companName" class="text-center"></h4></div>
+            <div class="col-xs-2 row pull-right">
+                <div class="pull-right dark-color">
+                    <select id="ddlyear-card-share" style="border:none;" class="text-right pull-right">
+                        <option value="2017">2017</option>
+                        <option value="2016">2016</option>
+                        <option value="2015">2015</option>
+                    </select>
+                    <div class="clearfix"></div>
+                    <p id="totalcardshared" class="p-small color-gray mar-bot0 italic text-right">0</p>
+                </div>
+            </div>
+                <div class="clearfix bb"></div>
+                <div class="pull-left">
+                    <p class="p-small color-gray mar-bot0">Cards</p>
+                </div>
+                <div class="chart">
+                    <canvas id="line_chart_card"></canvas>
+                </div>
+            </div><div class="clear"></div>
+        </div>
+</div>
+
+<script>
+//var arr;
+    $(document).ready(function () {
+        //Populate Years
+        //$("#ddlCompanies").searchable();
+        populatesYearsFirstTime();
+        populateCompanies();
+        PopulateChart();
+        CardCount();
+
+        $('#ddlCompanies').change(function () {
+            if ($('#ddlCompanies option:selected').text() == "All") {
+                $('#companName').text("");
+            }
+            else {
+                $('#companName').text($('#ddlCompanies option:selected').text());
+                //$('#companName').text($('#ddlCompanies').find('option:selected').text());
+            }
+            populatesYears();
+            PopulateChart();
+            CardCount();
+        });
+
+        function populateCompanies()
+        {
+                $.ajax({
+                url: '@Url.Action("CompaniesListForDropDown", "Default")',
+                processData: false,
+                dataType: "json",
+                type: 'GET',
+                cache: false,
+                success: function (data, textStatus, jqXHR) {
+                    $("#ddlCompanies").empty();
+                    $("#ddlCompanies").append('<option value="0">All</option>');
+                    $.each(data, function (i, tweet) {
+                        $("#ddlCompanies").append('<option value="' + tweet.Id + '">' + tweet.Name + '</option>');
+
+                    });
+
+                }
+            });
+        }
+
+        function populatesYearsFirstTime()
+        {
+                $.ajax({
+                url: '@Url.Action("CompanyYears", "Default")',
+                data: { companyId: 0  /* add other additional parameters */ },
+                dataType: "json",
+                type: 'GET',
+                cache: false,
+                success: function (data, textStatus, jqXHR) {
+                    $("#ddlyear-card-share").empty();
+                    $.each(data, function (i, tweet) {
+                        $("#ddlyear-card-share").append('<option value="' + tweet + '">' + tweet + '</option>');
+
+                    });
+
+                }
+            });
+        }
+
+        function populatesYears()
+        {
+                $.ajax({
+                url: '@Url.Action("CompanyYears", "Default")',
+                data: { companyId: parseInt($("#ddlCompanies").val())  /* add other additional parameters */ },
+                dataType: "json",
+                type: 'GET',
+                cache: false,
+                success: function (data, textStatus, jqXHR) {
+                    $("#ddlyear-card-share").empty();
+                    $.each(data, function (i, tweet) {
+                        $("#ddlyear-card-share").append('<option value="' + tweet + '">' + tweet + '</option>');
+
+                    });
+
+                }
+            });
+        }
+
+
+        //Card Share On Load of DOM
+            function PopulateChart() {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("CardShareChart", "Default")',
+                    data: { companyId: parseInt($("#ddlCompanies").val()), year: parseInt($("#ddlyear-card-share").val())  /* add other additional parameters */ },
+                    dataType: 'json',
+                    success: function (result) {
+                        var list = result.datalist;
+                        //$.each(list, function (index, value) {
+                        //    alert(value);
+                        //});
+                        var ctx = document.getElementById('line_chart_card').getContext('2d');
+                        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                        var countCardSharesArray = list;
+
+                        var lineChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: months,
+                                datasets: [{
+                                    label: 'Cards',
+                                    fill: false,
+                                    borderColor: '#FFA500',
+                                    data: countCardSharesArray
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true,
+                                            //min: 0,
+                                            //max: 10,
+                                            //stepValue: 1
+                                        },
+                                        gridLines: {
+                                            display: false
+                                        }
+                                    }]
+                                },
+                                legend: {
+                                    display: false,
+                                    labels: {
+                                        display: false
+                                    }
+                                },
+                                tooltips: {
+                                    backgroundColor: '#FFFFFF',
+                                    bodyFontColor: '#000000',
+                                    callbacks: {
+                                        title: function (tooltipItems, data) {
+                                            return '';
+                                        },
+                                        label: function (tooltipItem, data) {
+                                            var datasetLabel = '';
+                                            var label = data.labels[tooltipItem.index];
+                                            //return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                            return 'Cards: ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                        }
+                                    }
+                                },
+                            }
+                        });
+
+
+                    },
+                    error: function (e) {
+                        //alert("Error:Unable to load data from server");
+                    }
+                });
+            }
+        //End Card Share on Load of DOM
+
+
+        ///Populate Count of shared cards for this year
+            function CardCount()
+            {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("SharedCardCount", "Default")',
+                    data: { companyId: parseInt($("#ddlCompanies").val()), year: parseInt($("#ddlyear-card-share").val())  /* add other additional parameters */ },
+                    dataType: 'json',
+                    success: function (result) {
+                        $('#totalcardshared').text(result);
+                    },
+                    error: function (e) {
+                        alert("Error:Unable to load data from server");
+                    }
+                });
+            }
+
+        ///End Populate Count of shared cards for this year
+
+         //Change Event
+        $("#ddlyear-card-share").change(function (event) {
+
+            ///Populate Count of shared cards for this year
+            CardCount();
+        ///End Populate Count of shared cards for this year
+            PopulateChart();
+
+        });
+
+
+
+    });
+
+        </script>

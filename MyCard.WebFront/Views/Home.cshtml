@@ -1,0 +1,100 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<Home>
+@using MyCard.WebFront.API.Models
+@{
+    Layout = null;
+
+    //var media = Model.Content.GetPropertyValue("companyLogo");
+    var mediaItem = Model.Content.GetPropertyValue<IPublishedContent>("companyLogo");
+    var url = mediaItem.Url;
+    string title = Model.Content.PageTitle;
+    IPublishedContent whyImage = Model.Content.WhyImage;
+    IPublishedContent greenImage = Model.Content.GreenImage;
+}
+<html>
+<head>
+    <link href="~/css/bootstrap.css" rel="stylesheet">
+    <link href="~/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <section class="reletive">
+        <img class=" sidebar" alt="sidebar" src="~/img/sidebar.png">
+    </section>
+    @Html.Partial("Navigation", (IPublishedContent)Model.Content)
+    @Html.Partial("HomeSlidingBanner",Model.Content);
+
+    <section class="my-card">
+        <img class=" img-responsive" alt="product" src="@whyImage.Url">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 col-sm-6 abolute">
+                    <div class="align-left">
+                        <div class="testimonial pad-top40 pad-bot40 clearfix">
+                            <h2 class="four book">@Model.Content.WhyTitleText</h2><br>
+                            <p class="book">
+                                @Model.Content.WhyDescription
+                            </p>
+
+                            <button class="l-more">Learn More</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section appear clearfix pad-top40 " style="background:#fdfdfd;">
+        <div class="container">
+            <div class="row text-center">
+                <br><br>
+                <h2 class="four mar-top40 h2-bottom">@Model.Content.CoolMainHeading</h2>
+
+            </div>
+            <div class="row align-center mar-bot40">
+                @{
+                    var coolSections = Model.Content.CoolSections.ToList();
+                    foreach (var coolSection in coolSections)
+                    {
+                        var coolImage = coolSection.GetPropertyValue<IPublishedContent>("coolImage");
+                        var coolTitle = coolSection.GetPropertyValue<IHtmlString>("CoolHeading");
+                        var coolDescription = coolSection.GetPropertyValue<IHtmlString>("coolDescription");
+
+                        <div class="col-md-3">
+                            <div class="team-member">
+                                <figure class="member-photo"><img alt="" src="@coolImage.Url"></figure>
+                                <div class="team-detail">
+                                    <h3 class="mar-top30">
+                                        @coolTitle
+                                    </h3>
+                                    @coolDescription
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </section>
+
+
+    <section class="section pad-top40 pad-bot40 green-bg">
+        <div class="container">
+            <div class="align-center pad-top40 pad-bot40 col-md-offset-2 col-md-8 color-white">
+                <img class="img-responsive center-block" src="@greenImage.Url">
+                @Model.Content.GreenText
+                <button class="l-more2 center-block">Learn More</button>
+
+            </div>
+        </div>
+    </section>
+
+    @Html.Partial("ContactSection", (IPublishedContent)Model.Content)
+
+    <script src="~/scripts/jquery.js"></script>
+    <script src="~/scripts/bootstrap.js"></script>
+</body>
+
+</html>
+
+
+

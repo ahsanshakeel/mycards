@@ -1,0 +1,55 @@
+﻿@model MyCard.Web.Models.AdminDashboardViewModel
+@{
+    ViewBag.Title = "Admin Dashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_MasterLayoutSuperAdmin.cshtml";
+}
+
+
+<div class="col-sm-12 mar-bot20 ">
+
+
+    This is Admin Dashboard
+    <br>
+</div>
+
+<div class=" col-sm-3">
+    <a class="text-center shadow col-sm-12 bg-blue color-white padding40 center-block color-white" href="@Url.Action("CompaniesListing", "Default")">
+        Total Companies:<br> @Model.TotalComapnies
+    </a>
+</div>
+
+<div class=" col-sm-3"><a class="text-center padding40 shadow col-sm-12 block green-bg color-white" href="@Url.Action("CardShared", "Default")">Total Card Shared:<br> @Model.TotalCardsShared</a></div>
+
+<div class=" col-sm-3">
+    <a class="text-center shadow col-sm-12 bg-blue color-white padding40 center-block color-white" href="@Url.Action("PurchaseOrdersListing", "Default")">
+        Total Pending Orders: <br>@Model.TotalPendingOrders
+    </a>
+</div>
+
+<div class=" col-sm-3"><a class="text-center padding40 shadow col-sm-12 block green-bg color-white" href="@Url.Action("CompanyRevenue", "Default")">Total Revenue:<br>$ @Model.TotalRevenue</a></div>
+
+
+<div class="clearfix"></div>
+@*<div class=" col-sm-3 mar-top20"><a class="text-center shadow col-sm-12 bg-blue color-white padding40 center-block color-white" href="@Url.Action("InquiryListing", "Default")">Leads<br />click here</a></div>*@
+<div class=" col-sm-3 mar-top20"><a class="text-center shadow col-sm-12 bg-blue color-white padding40 center-block color-white" href="@Url.Action("RegisterCompany", "Default")">Register Company<br />click here</a></div>
+<div class=" col-sm-3 mar-top20"><a class="text-center padding40 shadow col-sm-12 block green-bg color-white" href="@Url.Action("EmailComposer", "Default")">Email Editor<br />click here</a></div>
+@*<div class=" col-sm-3 mar-top20"><a class="text-center shadow col-sm-12 bg-blue color-white padding40 center-block color-white" href="@Url.Action("MyCardFiles", "Default")">Proposal File<br />click here</a></div>*@
+<div class=" col-sm-3 mar-top20"><a class="text-center shadow col-sm-12 bg-blue color-white padding40 center-block color-white" href="@Url.Action("ChangeDescription", "Default")">Change Descriptions<br />click here</a></div>
+@*<div class=" col-sm-3 mar-top20"><a class="text-center padding40 shadow col-sm-12 block green-bg color-white" href="@Url.Action("ChangeDescription", "Default")">Change Descriptions<br />click here</a></div>*@
+
+@*<div class="clearfix"></div>
+<div class=" col-sm-3 mar-top20"><a class="text-center shadow col-sm-12 bg-blue color-white padding40 center-block color-white" href="@Url.Action("RegisterCompany", "Default")">Register Company<br />click here</a></div>*@
+
+
+<div class="clearfix"></div>
+<div class=" col-sm-4 col-sm-offset-2 mar-top20">
+    <a class=" text-center center-block l-more mar-top25" href="@Url.Action("ChangePassword", "Default")">Change Password</a>
+</div>
+
+<div class=" col-sm-4 mar-top20">
+    <a class=" text-center center-block l-more mar-top25" href="@Url.Action("ChangePricing", "Default")">Change License Pricing</a>
+</div>
+
+
+
+

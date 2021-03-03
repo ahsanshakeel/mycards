@@ -1,0 +1,215 @@
+﻿
+@{
+    ViewBag.Title = @MyCard.Web.Resources.CaptionsAll.UploadPOTitle;
+    Layout = "~/Views/Shared/_MasterLayoutPurchase.cshtml";
+}
+
+@using (Html.BeginForm("Upload", "CompanyDashboard", FormMethod.Post, new { enctype = "multipart/form-data", id = "uploadform", name = "uploadform" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary()
+    <div class="col-xs-12">
+        <div class="col-sm-8 register-top">
+            <div class=" col-xs-12">
+                <div class="row">
+
+                    <label class="dark-color mar-bot40 f-p book">@MyCard.Web.Resources.CaptionsAll.UploadPOMainMessage</label>
+                    <br>
+                    <p id="generalError" class="error p-small medium red-color"></p>
+                    <p id="pselectfileerror" name="perror" class="error p-small medium red-color" hidden>@MyCard.Web.Resources.ErrorMessages.PurchaseUploadPOFileNotSelectedError</p>
+                    <p id="perror" name="perror" class="error p-small medium red-color" hidden>@MyCard.Web.Resources.ErrorMessages.POUploadFileTypeError</p>
+                    <p id="termsError" class="error p-small medium red-color" hidden>@MyCard.Web.Resources.ErrorMessages.TermsAcceptError</p>
+                    <br />
+                    <div class="clearfix"></div>
+                    <a href="#" class="large-upload mar-top25 h4-well24 book" id="uploadButton" name="uploadButton">Upload PO <i class="fa fa-upload"></i></a>
+                    <div class="clearfix"></div>
+                    <br>
+                    <p class="color-gray-cc pad-bot0 medium f-p-medium" style="font-style:italic; display:none" id="filep" name="filep">
+                        <i id="deletefile" name="deletefile" class=" fa fa-times-circle"></i>
+                        <label id="filename" name="filename"></label>
+                        <span class="green">attached.</span> 1 file.
+                    </p>
+                    <div class=" col-xs-7 bb"></div>
+                </div>
+            </div>
+            <div class=" col-xs-7">
+                <div class="row mar-top10">
+                    <div class="pull-left mar-top15">
+                        <div class="squaredChk pull-left w-100">
+                            <input id="chkAcceptTerms" name="chkAcceptTerms" class="hidden" type="checkbox" value="None">
+                            <label class="" for="chkAcceptTerms"></label>
+                        </div>
+                        <label class="pull-left p-small book mar-left5">@MyCard.Web.Resources.CaptionsAll.UploadPOIacceptThe <span style="text-decoration:underline; color:#595959;"><a href="https://www.mycards.com/terms.html" target="_blank">@MyCard.Web.Resources.CaptionsAll.UploadPOTermofServices</a></span></label>
+                    </div>
+                    <br>
+                    <div class=" clearfix"></div>
+                    <div class="pull-left">
+                        <button type="button" class="large-submit mar-top25 h4-well24 book" name="submit" id="submit">@MyCard.Web.Resources.CaptionsAll.SubmitButton</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class=" clearfix"></div>
+    <input type="file" id="file" name="file" style="display:none" />
+}
+
+<div class="modal fade product_view" id="popup_view" name="popup_view">
+    <div class="modal-dialog">
+        <div style="border:none;" class="modal-content">
+            <div class="col-xs-12 row">
+                <div class="green-bg popup row">
+                    <div class="col-xs-2">
+                        <img alt="tick" src="~/img/admin/popup-tick.png" class="img center-block" />
+                    </div>
+                    <div class="col-xs-10">
+                        @*<h4 class="color-white bold h4-well24 mar-top15">@MyCard.Web.Resources.CaptionsAll.PurchaseUploadPOSuccessMessage1</h4>*@
+                        <p class="color-white book h4-well24 mar-top15">@MyCard.Web.Resources.CaptionsAll.PurchaseUploadPOSuccessMessage1</p>
+                        <p class="color-white book h4-well24 mar-top5">
+                            @MyCard.Web.Resources.CaptionsAll.PurchaseUploadPOSuccessMessage2
+                        </p>
+                        @*<div class="pull-left mar-top15 check-m-top">
+                            <div class="squaredChk pull-left">
+                                <input id="chkInvoice" name="chkInvoice" class="hidden" type="checkbox" value="None">
+                                <label id="chkInvoiceLabel" class="popup-check hidden" for="chkInvoice"></label>
+                            </div>
+                            <label style="color:white" class="pull-left p-small book mar-left5 color-white mar-top2 hidden">@MyCard.Web.Resources.CaptionsAll.UploadPOPopupHardCopy</label>
+                        </div>*@
+                    </div>
+
+                    <div class="clear"></div>
+
+                </div>
+                @*<a href="@System.Configuration.ConfigurationManager.AppSettings["myCardDesigner"]/@User.Identity.Name.Split('|')[2]/@User.Identity.Name.Split('|')[3]"  onclick="sendHardCopy()" class="row submit f-p medium pull-right">@MyCard.Web.Resources.CaptionsAll.UploadPOPopupNext <i class="fa fa-chevron-right"></i></a>*@
+                <a href="@Url.Action("Index", "CompanyDashboard")" onclick="sendHardCopy()" class="row submit f-p medium pull-right">@MyCard.Web.Resources.CaptionsAll.UploadPOPopupNext <i class="fa fa-chevron-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //function nextFunction() {
+    //    $('#popup_view').modal({ backdrop: 'static', keyboard: false });
+    //}
+    function sendHardCopy() {
+        //$('#popup_view').hide();
+        var sendCopy = $(chkInvoice).is(':checked');
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SendHardCopy", "CompanyDashboard")',
+                data: { sendCopy: sendCopy },
+            //data: { approved: isDone},
+            success: function(res) {
+                console.log(res);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $('#submit').click(function () {
+
+            if ($('#file').val()) {
+                if (!$('#chkAcceptTerms').is(':checked')) {
+                    $('#termsError').show();
+                    return false;
+                }
+                else {
+                    $('#termsError').hide();
+                    $('#uploadform').submit();
+                }
+
+            }
+            else {
+                //$('#crosspopup_viewupload').modal({ backdrop: 'static', keyboard: false });
+                $('#pselectfileerror').show();
+                return false;
+            }
+
+        });
+
+        $("#chkAcceptTerms").change(function () {
+            if (this.checked) {
+                $('#termsError').hide();
+            }
+            else {
+                $('#termsError').show();
+            }
+        });
+
+        $('#file').change(function () {
+            var fileName = $(this).val();
+
+            if (!fileName)
+            {
+                $('#file').val('');
+                $('#filep').hide();
+                return false;
+            }
+            var ext = this.value.match(/\.([^\.]+)$/)[1];
+            switch (ext) {
+                case 'pdf':
+                    $('#perror').hide();
+                    break;
+                default:
+                    //alert('Select the correct format (jpg or png only)');
+                    $('#perror').show();
+                    $('#file').val('');
+                    $('#filep').hide();
+                    return false;
+            }
+            $('#pselectfileerror').hide();
+            $('#filep').show();
+            $('#filename').text(this.files[0].name);
+        });
+
+        $('#uploadButton').click(function () {
+            $('#file').click();
+        });
+
+        $('#deletefile').click(function () {
+            $('#file').val('');
+            $('#filep').hide();
+        });
+
+
+        $("#uploadform").on("submit", function (event) {
+            event.preventDefault();
+            var url = $(this).attr("action");
+
+            //var formData = $(this).serialize();
+
+            var file = $('#file').get(0).files[0];
+            if (!file) {
+                return false;
+            }
+            var formData = new FormData();
+            formData.append("file", file);
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: formData,
+                dataType: "json",
+                processData: false,
+                contentType: false,
+                success: function (resp) {
+                    if (resp.success) {
+                        //$('#popup_view').modal('show');
+                        $('#popup_view').modal({ backdrop: 'static', keyboard: false })
+                    }
+                    else {
+                        //$('#crosspopup_view').modal({ backdrop: 'static', keyboard: false });
+                        $('#generalError').text(resp.responseText);
+                    }
+                },
+                error: function (response) {
+                    //alert("error!");  //
+                    //$('#crosspopup_view').modal({ backdrop: 'static', keyboard: false });
+                    $('#generalError').text(resp.responseText);
+                }
+            })
+            //$('#popup_view').modal({ backdrop: 'static', keyboard: false });
+        });
+    });
+</script>

@@ -1,0 +1,67 @@
+﻿@model MyCard.Web.Models.CompanyLicenseViewModel
+@{
+    ViewBag.Title = @MyCard.Web.Resources.CaptionsAll.RegistrationTitle;
+    Layout = "~/Views/Shared/_MasterLayoutAdmin.cshtml";
+}
+
+
+@using (Html.BeginForm("GoToRegister", "Home", FormMethod.Post, new { encType = "multipart/form-data" }))
+{
+    <div class="clearfix"></div>
+    <div class="col-xs-12">
+        <div class="col-xs-12 row">
+            <p class="mar-top10 book f-h"></p>
+        </div>
+        <div>
+
+            @foreach (var item in Model.LicenseDescriptions)
+            {
+                <div class="reg">
+                    <bdo>
+                        @Html.RadioButtonFor(x => x.CompanyLicenseType, item.LicenseName, new { @style = "float:left; width:20px;" })
+                        <span></span>
+                        <abbr> @item.LicenseName  </abbr>
+                        
+                        <p>@item.Description</p>
+                    </bdo>
+                </div>
+            }
+
+            @*<div class="reg">
+                <bdo>
+                    @Html.RadioButtonFor(model => model.Licne, "Freemium", new { @style = "float:left; width:20px;" })
+                    <span></span>
+                    <abbr> Freemium  </abbr>
+                    <br />
+                    <span>15,000 Pairs &amp; shares</span>
+                </bdo>
+            </div>
+            <div class="reg">
+                <bdo>
+                    @Html.RadioButtonFor(model => model.CompanyLicenseType, "Premium", new { @style = "float:left; width:20px;" })
+                    <span></span>
+                    <abbr> Premium USD 2.99/User/Month (Annual Subscription) </abbr>
+                </bdo>
+            </div>*@
+
+            @*<div class="col-md-2 ">
+            <div class="">
+                <input type="submit" id="UpdateButton" Name="UpdateButton" value="OK" />
+            </div>
+        </div>*@
+
+
+
+
+
+        </div>
+
+    </div>
+    <div class=" col-xs-12">
+        <div class="form">
+            <div class="pull-right"> <button type="submit" class="submit" data-toggle="modal" name="UpdateButton" id="UpdateButton">Next</button> </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+}

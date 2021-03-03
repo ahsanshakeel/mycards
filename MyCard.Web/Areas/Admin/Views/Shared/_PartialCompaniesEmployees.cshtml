@@ -1,0 +1,76 @@
+﻿@model MyCard.Web.Models.EmployeeListingViewModel
+
+@{
+    var listItems = new List<SelectListItem>
+        {
+            new SelectListItem { Text = "10", Value = "10" },
+            new SelectListItem { Text = "20", Value = "20" },
+            new SelectListItem { Text = "50", Value = "50" },
+            new SelectListItem { Text = "100", Value = "100" }
+        };
+}
+
+@Html.Hidden("PageCount", Model.PageCount)
+@Html.Hidden("CurrentPageIndex", Model.CurrentPageIndex)
+@Html.Hidden("CompanyID", Model.CompanyID)
+
+<div class="col-md-12">
+    <table class="table table-striped table-bordered table-condensed">
+        <tr>
+            <th>Employee Name</th>
+            <th>Email</th>
+            <th><span class="text-center center-block">Joining Date</span></th>
+            <th><span class="text-center center-block">Status</span></th>
+        </tr>
+
+        @foreach (MyCard.Web.Models.EmployeeListViewModel item in Model.EmployeesList)
+            {
+            @Html.HiddenFor(model => item.ID)
+            <tr>
+                <td>@item.EmployeeName</td>
+                <td>@item.EmailID</td>
+                <td><span class="text-center center-block">@item.JoiningDate</span></td>
+                @if (item.Status == "Deactivated")
+                {
+                    <td align="center"><a style="width:70%;display:block" class="submit text-center" href="#" onclick="AsyncConfirmYesNo(1, @item.ID);">Deactivated</a></td>
+                }
+                else
+                {
+                    <td><a class="submit text-center center-block" href="#" onclick="AsyncConfirmYesNo(0, @item.ID);">Activated</a></td>
+                }
+
+            </tr>
+        }
+    </table>
+
+
+
+    <div class="col-md-2 row">
+        @Html.DropDownListFor(m => m.PageSize, new SelectList(listItems, "Value", "Text", Model.PageSize), new { @class = "form-control", @placeholder = "Records per Page", onchange = "PageSizeChange()" })
+    </div>
+
+</div>
+<ul class="pager">
+    @for (var i = 0; i < Model.PageCount; i++)
+    {
+        if (i == Model.CurrentPageIndex)
+        {
+            <li><span class="current-pager" id="CurrentPageIndex">@(i + 1)</span></li>
+        }
+        else
+        {
+            <li><a href="#" data-pageindex="@i" class="pager" onclick="pagerclick(@i);">@(i + 1)</a></li>
+        }
+    }
+</ul>
+
+
+
+
+
+
+
+
+
+
+
